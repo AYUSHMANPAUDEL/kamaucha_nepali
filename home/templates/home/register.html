@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <style>
+    /* Existing CSS from previous example */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #3498db, #8e44ad);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      display: flex;
+      overflow: hidden;
+      width: 80%;
+      max-width: 1200px;
+    }
+    .form-section {
+      padding: 50px;
+      width: 60%;
+    }
+    .form-section h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .form-section input {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .form-section button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(45deg, #3498db, #8e44ad);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .form-section button:hover {
+      background: linear-gradient(45deg, #8e44ad, #3498db);
+      transform: scale(1.05);
+    }
+    .info-section {
+      background: #3498db;
+      padding: 50px;
+      width: 40%;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .info-section h3 {
+      font-size: 28px;
+    }
+    .error-message {
+      color: red;
+      display: none;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="info-section">
+      <h3>Join the Future of Streaming Today!</h3>
+    </div>
+    <div class="form-section">
+      <h2>Register</h2>
+      <form method="POST">
+        {% csrf_token %}
+      <div class="error-message" id="error-message">Passwords do not match!</div>
+      <input type="text" name="username" id="username" placeholder="Full Name" required>
+      <input type="email" id="email" name="email" placeholder="Email Address" required>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+      <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+      <button type="submit" onclick="validatePasswords()">Join Now</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function validatePasswords() {
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm-password").value
+      const errorMessage = document.getElementById("error-message");
+      if (password !== confirmPassword) {
+        errorMessage.style.display = "block";
+      } else {
+        errorMessage.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>

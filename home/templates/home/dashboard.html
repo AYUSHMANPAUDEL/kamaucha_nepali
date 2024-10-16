@@ -1,1 +1,447 @@
-{{user.username}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamaucha Nepali Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Chart.js (Optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f4f6f9;
+        }
+        /* Sidebar Styling */
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #343a40;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #495057;
+            color: #fff;
+        }
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+        /* Content Styling */
+        .content {
+            width: 100%;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        /* Top Navbar Styling */
+        .top-navbar {
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-navbar .navbar-brand {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        /* Adjust content padding to accommodate fixed navbar */
+        .main-content {
+            margin-top: 60px;
+        }
+        /* Message Styling */
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .message-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            animation: fadeIn 0.5s ease;
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            background: linear-gradient(135deg, #00b09b, #96c93d); /* Default gradient */
+        }
+        .message-item.success {
+            background: linear-gradient(135deg, #00b09b, #96c93d); /* Green for success */
+        }
+        .message-item.error {
+            background: linear-gradient(135deg, #f85032, #e73827); /* Red for error */
+        }
+        .message-item.info {
+            background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Blue for info */
+        }
+        .message-item.warning {
+            background: linear-gradient(135deg, #ffb74d, #f57c00); /* Orange for warning */
+        }
+        .message-item:before {
+            content: "";
+            width: 8px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 8px 0 0 8px;
+            background-color: rgba(255, 255, 255, 0.3); /* Decorative side bar */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                min-width: 80px;
+                max-width: 80px;
+                text-align: center;
+            }
+            .sidebar .nav-link span {
+                display: none;
+            }
+        }
+        /* Greeting Styling */
+        .greeting {
+            margin-bottom: 30px;
+            animation: slideIn 0.5s ease;
+        }
+        .greeting h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        /* Sidebar animation for collapsing and expanding */
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background-color: #343a40;
+    color: #fff;
+    transition: all 0.3s ease;  /* Transition for smooth animation */
+}
+
+.sidebar.collapsed {
+    min-width: 80px;
+    max-width: 80px;
+}
+
+.content {
+    transition: all 0.3s ease; /* Smooth transition for content width */
+}
+
+.content.expanded {
+    margin-left: 80px; /* Adjust margin when sidebar is collapsed */
+}
+
+/* Optional: Hide text in sidebar when collapsed */
+.sidebar.collapsed .nav-link span {
+    display: none;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar d-flex flex-column p-3">
+        <a href="#" class="navbar-brand mb-4">Kamaucha Nepali</a>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item mb-2">
+                <a href="#dashboard" class="nav-link active" aria-current="page">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#donations" class="nav-link">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Donation Page</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#alerts" class="nav-link">
+                    <i class="bi bi-bell"></i>
+                    <span>Alerts</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#payouts" class="nav-link">
+                    <i class="bi bi-wallet2"></i>
+                    <span>Payout Requests</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#support" class="nav-link">
+                    <i class="bi bi-life-preserver"></i>
+                    <span>Support</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#transactions" class="nav-link">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>Transaction History</span>
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="#tips" class="nav-link">
+                    <i class="bi bi-cup"></i>
+                    <span>Donations</span>
+                </a>
+            </li>
+            <!-- Add more items as needed -->
+        </ul>
+        <hr>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle me-2"></i>
+                <span>User</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href"{% url "logout_page" %}">Sign out</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content flex-grow-1">
+        <!-- Top Navbar -->
+        <nav class="top-navbar d-flex justify-content-between align-items-center">
+            <div>
+                <button class="btn btn-primary" id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+            <div class="d-flex align-items-center">
+                <!-- Personalized Greeting in Navbar -->
+                <span class="me-3 fw-semibold">Hello, {{ user.username }}!</span>
+                <a href="#" class="btn btn-outline-secondary me-2" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                </a>
+                <a href="#" class="btn btn-outline-secondary" title="Settings">
+                    <i class="bi bi-gear"></i>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Personalized Greeting in Main Content -->
+            <div class="greeting">
+                <h1>Hello, {{ user.username }}!</h1>
+                <p>Welcome back to your dashboard. Here's an overview of your activities:</p>
+            </div>
+
+            <!-- Messages Section -->
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li class="message-item {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <!-- Dashboard Widgets -->
+            <div class="container-fluid">
+                <div class="row g-4">
+                    <!-- Total Donations -->
+                    <div class="col-md-4">
+                        <div class="card text-white bg-success h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">Total Donations</h5>
+                                        <h3>NPR {{total_donation}}</h3>
+                                    </div>
+                                    <i class="bi bi-cash-stack display-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Recent Transactions -->
+                    <div class="col-md-8">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                Recent Transactions
+                            </div>
+                            <div class="card-body">
+                                <canvas id="transactionsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Payout Requests -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                Payout Requests
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        User A
+                                        <span class="badge bg-primary rounded-pill">$500</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        User B
+                                        <span class="badge bg-primary rounded-pill">$300</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        User C
+                                        <span class="badge bg-primary rounded-pill">$200</span>
+                                    </li>
+                                    <!-- Add more payout requests -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Support Tickets -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                Support Tickets
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Ticket #1234
+                                        <span class="badge bg-warning rounded-pill">Pending</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Ticket #1235
+                                        <span class="badge bg-success rounded-pill">Resolved</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Ticket #1236
+                                        <span class="badge bg-danger rounded-pill">Closed</span>
+                                    </li>
+                                    <!-- Add more support tickets -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tips Section -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                Recent Tips
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    {% for donation in recent_donations %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ donation.donator_name }}  <!-- Display the username -->
+                                            <span class="badge bg-info rounded-pill">NPR {{ donation.donation_amount }}</span>  <!-- Display the amount -->
+                                        </li>
+                                    {% empty %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            No recent donations.
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Alerts Section -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                Alerts
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-warning" role="alert">
+                                    New donation received from User A!
+                                </div>
+                                <div class="alert alert-info" role="alert">
+                                    System maintenance scheduled for tonight.
+                                </div>
+                                <div class="alert alert-success" role="alert">
+                                    Payout request from User B approved.
+                                </div>
+                                <!-- Add more alerts as needed -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js Script (Optional) -->
+    <script>
+        // Example: Transactions Chart
+        const ctx = document.getElementById('transactionsChart').getContext('2d');
+        const transactionsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Donations',
+                    data: [1200, 1900, 3000, 5000, 2000, 3000],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <!-- Sidebar Toggle Script -->
+ <!-- Sidebar Toggle Script -->
+<script>
+    const sidebar = document.querySelector('.sidebar');
+    const content = document.querySelector('.content');
+    const sidebarToggleBtn = document.getElementById('sidebarToggle');
+    
+    sidebarToggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        content.classList.toggle('expanded'); // Adjust the content area width
+        
+        // Optionally toggle the icon between 'list' and 'x' when clicking the button
+        const icon = sidebarToggleBtn.querySelector('i');
+        if (sidebar.classList.contains('collapsed')) {
+            icon.classList.remove('bi-list');
+            icon.classList.add('bi-x');
+        } else {
+            icon.classList.remove('bi-x');
+            icon.classList.add('bi-list');
+        }
+    });
+</script>
+
+</body>
+</html>

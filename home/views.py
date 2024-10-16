@@ -2,11 +2,14 @@ from django.shortcuts import render , HttpResponse , redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.contrib import messages
+from home.models import TotalDonation , Donation
 # Create your views here.
 def home_page(request):
     return render(request,"home/index.html")
 
 def register_page(request):
+    if request.user.is_authenticated:
+       return redirect("/dashboard/")
     if request.method == "POST":
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
@@ -40,7 +43,10 @@ def login_page(request):
 
 def dashboard_page(request):
     if request.user.is_authenticated:
-     return render(request,"home/dashboard.html")
+     recent_donations = Donation.objects.filter(username=request.user).order_by('-donation_date')[:5]
+     total_donation = TotalDonation.objects.get(username=request.user).total_donation
+     print(total_donation)
+     return render(request,"home/dashboard.html",{"total_donation":total_donation ,"recent_donations": recent_donations})
     return redirect("/login/")
 
 def logout_page(request):

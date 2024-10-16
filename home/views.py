@@ -2,7 +2,7 @@ from django.shortcuts import render , HttpResponse , redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.contrib import messages
-from home.models import TotalDonation , Donation
+from home.models import TotalDonation , Donation , PayoutRequest
 # Create your views here.
 def home_page(request):
     return render(request,"home/index.html")
@@ -44,9 +44,13 @@ def login_page(request):
 def dashboard_page(request):
     if request.user.is_authenticated:
      recent_donations = Donation.objects.filter(username=request.user).order_by('-donation_date')[:5]
-     total_donation = TotalDonation.objects.get(username=request.user).total_donation
+     try:
+        total_donation = TotalDonation.objects.get(username=request.user).total_donation
+     except TotalDonation.DoesNotExist:
+            total_donation = 0
+     payout_requests = PayoutRequest.objects.filter(username=request.user).order_by('-appeal_date')[:5]
      print(total_donation)
-     return render(request,"home/dashboard.html",{"total_donation":total_donation ,"recent_donations": recent_donations})
+     return render(request,"home/dashboard.html",{"total_donation":total_donation ,"recent_donations": recent_donations,"payout_requests":payout_requests})
     return redirect("/login/")
 
 def logout_page(request):

@@ -295,30 +295,42 @@
                         </div>
                     </div>
                     <!-- Payout Requests -->
-                    <div class="col-md-6">
+                    <div class="col-md-6"> 
                         <div class="card h-100">
                             <div class="card-header">
                                 Payout Requests
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        User A
-                                        <span class="badge bg-primary rounded-pill">$500</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        User B
-                                        <span class="badge bg-primary rounded-pill">$300</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        User C
-                                        <span class="badge bg-primary rounded-pill">$200</span>
-                                    </li>
-                                    <!-- Add more payout requests -->
+                                    {% for payout_request in payout_requests %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ payout_request.appeal_date }}
+                                            
+                                            {% if payout_request.payout_status == 'Pending' %}
+                                                <span class="badge bg-warning rounded-pill">{{ payout_request.payout_status }}</span>
+                                            {% elif payout_request.payout_status == 'Approved' %}
+                                                <span class="badge bg-success rounded-pill">{{ payout_request.payout_status }}</span>
+                                            {% elif payout_request.payout_status == 'Rejected' %}
+                                                <span class="badge bg-danger rounded-pill">{{ payout_request.payout_status }}</span>
+                                            {% elif payout_request.payout_status == 'Completed' %}
+                                                <span class="badge bg-primary rounded-pill">{{ payout_request.payout_status }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary rounded-pill">{{ payout_request.payout_status }}</span>
+                                            {% endif %}
+                                            
+                                            <span class="badge bg-primary rounded-pill">NPR {{ payout_request.payout_amount }}</span>
+                                        </li>
+                                    {% empty %}
+                                        <li class="list-group-item">
+                                            No payout requests found.
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    
+                    
                     <!-- Support Tickets -->
                     <div class="col-md-6">
                         <div class="card h-100">

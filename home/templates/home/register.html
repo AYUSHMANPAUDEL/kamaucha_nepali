@@ -72,6 +72,59 @@
       display: none;
       margin-bottom: 10px;
     }
+    .messages {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      max-width: 500px;
+  }
+  
+  .message-item {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      animation: fadeIn 0.5s ease;
+      display: flex;
+      align-items: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      background: linear-gradient(135deg, #00b09b, #96c93d); /* Default gradient */
+  }
+  
+  .message-item.success {
+      background: linear-gradient(135deg, #00b09b, #96c93d); /* Green for success */
+  }
+  
+  .message-item.error {
+      background: linear-gradient(135deg, #f85032, #e73827); /* Red for error */
+  }
+  
+  .message-item.info {
+      background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Blue for info */
+  }
+  
+  .message-item.warning {
+      background: linear-gradient(135deg, #ffb74d, #f57c00); /* Orange for warning */
+  }
+  
+  .message-item:before {
+      content: "";
+      width: 8px;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 8px 0 0 8px;
+      background-color: rgba(255, 255, 255, 0.3); /* Decorative side bar */
+  }
+  
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
   </style>
 </head>
 <body>
@@ -84,8 +137,16 @@
       <h2>Register</h2>
       <form method="POST">
         {% csrf_token %}
-      <div class="error-message" id="error-message">Passwords do not match!</div>
-      <input type="text" name="username" id="username" placeholder="Full Name" required>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+      <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
+      <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+      <input type="text" name="username" id="username" placeholder="Username" required>
       <input type="email" id="email" name="email" placeholder="Email Address" required>
       <input type="password" id="password" name="password" placeholder="Password" required>
       <input type="password" id="confirm-password" placeholder="Confirm Password" required>

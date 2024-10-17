@@ -53,3 +53,31 @@ class PayoutRequest(models.Model):
 
     def __str__(self):
         return f"{self.username}"
+    
+
+class Support(models.Model):
+    PENDING = 'Pending'
+    Resolved = 'Resolved'
+    Closed = 'Closed'
+    PAYOUT_STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (Resolved, 'Resolved'),
+        (Closed, 'Closed'),
+    ]
+    username = models.ForeignKey(User,on_delete=models.CASCADE)
+    discord_id = models.TextField()
+    ticket_title = models.TextField(default="")
+    support_message = models.TextField()
+    ticket_status = models.CharField(
+        max_length=20,
+        choices=PAYOUT_STATUS_CHOICES,
+        default=PENDING,
+    )
+    created_at = models.DateField(auto_now_add=True)
+    def __str__(self):
+     return f"{self.username}"
+
+class Annoucement(models.Model):
+   title = models.TextField(max_length=100)
+   annoucement_message = models.TextField()
+   created_at = models.DateField(auto_now_add=True)

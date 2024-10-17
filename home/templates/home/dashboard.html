@@ -170,43 +170,43 @@
         <a href="#" class="navbar-brand mb-4">Kamaucha Nepali</a>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item mb-2">
-                <a href="#dashboard" class="nav-link active" aria-current="page">
+                <a href="{% url "dashboard_page" %}" class="nav-link active" aria-current="page">
                     <i class="bi bi-speedometer2"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#donations" class="nav-link">
+                <a href="{% url "donation_setup_page" %}" class="nav-link">
                     <i class="bi bi-cash-stack"></i>
                     <span>Donation Page</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#alerts" class="nav-link">
+                <a href="{% url "alert_setup_page" %}" class="nav-link">
                     <i class="bi bi-bell"></i>
-                    <span>Alerts</span>
+                    <span>Alert Setup</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#payouts" class="nav-link">
+                <a href="{% url "payout_request_page" %}" class="nav-link">
                     <i class="bi bi-wallet2"></i>
                     <span>Payout Requests</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#support" class="nav-link">
+                <a href="{% url "support_page" %}" class="nav-link">
                     <i class="bi bi-life-preserver"></i>
                     <span>Support</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#transactions" class="nav-link">
+                <a href="{% url "transcations_history_page" %}" class="nav-link">
                     <i class="bi bi-card-checklist"></i>
                     <span>Transaction History</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="#tips" class="nav-link">
+                <a href="{% url "donations_page" %}" class="nav-link">
                     <i class="bi bi-cup"></i>
                     <span>Donations</span>
                 </a>
@@ -217,11 +217,9 @@
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle me-2"></i>
-                <span>User</span>
+                <span>{{user.username}}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href"{% url "logout_page" %}">Sign out</a></li>
             </ul>
@@ -339,23 +337,28 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush">
+                                    {% for ticket in support_tickets %}
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Ticket #1234
-                                        <span class="badge bg-warning rounded-pill">Pending</span>
+                                        Ticket #{{ ticket.id }}
+                                        {% if ticket.ticket_status == 'Pending' %}
+                                            <span class="badge bg-warning rounded-pill">Pending</span>
+                                        {% elif ticket.status == 'Resolved' %}
+                                            <span class="badge bg-success rounded-pill">Resolved</span>
+                                        {% elif ticket.status == 'Closed' %}
+                                            <span class="badge bg-danger rounded-pill">Closed</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary rounded-pill">{{ ticket.ticket_status }}</span>
+                                        {% endif %}
                                     </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Ticket #1235
-                                        <span class="badge bg-success rounded-pill">Resolved</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Ticket #1236
-                                        <span class="badge bg-danger rounded-pill">Closed</span>
-                                    </li>
-                                    <!-- Add more support tickets -->
+                                    {% empty %}
+                                    <p>No Recent Suppor Tickets</p>
+                                    {% endfor %}
+                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    
                     <!-- Tips Section -->
                     <div class="col-md-6">
                         <div class="card h-100">
@@ -383,18 +386,18 @@
                     <div class="col-md-6">
                         <div class="card h-100">
                             <div class="card-header">
-                                Alerts
+                               Annoucements
                             </div>
+                            
                             <div class="card-body">
+                                {% for annoucement in annoucements  %}
                                 <div class="alert alert-warning" role="alert">
-                                    New donation received from User A!
+                                   {{annoucement.annoucement_message}}
                                 </div>
-                                <div class="alert alert-info" role="alert">
-                                    System maintenance scheduled for tonight.
-                                </div>
-                                <div class="alert alert-success" role="alert">
-                                    Payout request from User B approved.
-                                </div>
+                                {% empty %}
+                                <p>No Annoucements!</p>
+                                {% endfor %}
+                                
                                 <!-- Add more alerts as needed -->
                             </div>
                         </div>
@@ -403,20 +406,31 @@
             </div>
         </div>
       </div>
+     
     
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Chart.js Script (Optional) -->
     <script>
-        // Example: Transactions Chart
+        // Assuming 'recent_donations' is a list of Donation objects passed from Django
+        const donationDates = [];
+        const donationAmounts = [];
+    
+        // Loop through the recent_donations to fill the arrays
+        {% for donation in recent_donations %}
+            donationDates.push('{{ donation.donation_date|date:"Y-m-d" }}');
+            donationAmounts.push({{ donation.donation_amount }});
+        {% endfor %}
+    
+        // Create the Chart.js bar chart
         const ctx = document.getElementById('transactionsChart').getContext('2d');
         const transactionsChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                labels: donationDates,  // Fill labels with dates
                 datasets: [{
                     label: 'Donations',
-                    data: [1200, 1900, 3000, 5000, 2000, 3000],
+                    data: donationAmounts,  // Fill data with amounts
                     backgroundColor: 'rgba(54, 162, 235, 0.7)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1

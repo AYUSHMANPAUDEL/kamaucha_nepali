@@ -1,42 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donate Page</title>
+    <title> {{donation_page_details.username}} || Donate Page</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f4f4f9;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: blue;
+            text-decoration none;
+        }
+
+        .donation-form {
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .profile-pic-placeholder {
+            width: 100px;
+            height: 100px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            display: block;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .top-donors {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .popup button {
+            margin-top: 10px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #218838;
+        }
+        .profile-pic-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            padding: 5px;
+            background-color: #f0f0f0;
+            margin-bottom: 10px;
+        }
+        
+        .donation-recipient-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333;
+        }
+        
+        .donation-recipient-message {
+            font-size: 1rem;
+            font-style: italic;  /* Optional: makes the message italic */
+            color: #666;         /* Customize the text color */
+            margin-top: 5px;
+        }
+        
+    </style>
 </head>
+
 <body>
 
-<h1>Donate Page</h1>
-<button id="donate-button">Send Random Donation</button>
+    <!-- Navbar with Logo -->
+    <nav class="navbar navbar-light bg-light">
+        <a class="logo-text" href="/">Kamaucha Nepali</a> <!-- Home link -->
+    </nav>
 
-<script>
-    // Create a WebSocket connection
-    const ws = new WebSocket(`ws://${window.location.host}/ws/alert/{{alert_detail.alert_id}}/`);
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Donation Form -->
+            <div class="col-lg-7 col-md-8 col-sm-12">
+                <div class="donation-form">
+                    <h2 class="text-center mb-4">Make a Donation</h2>
+                    <div class="text-center">
+                        <img id="profile-pic" src="{{donation_page_details.profile_picture.url}}" alt="Profile Picture" class="profile-pic-img">
+                        <h2 class="donation-recipient-name">{{donation_page_details.username}}</h2>
+                        <p class="donation-recipient-message">{{donation_page_details.page_message}}</p>
+                    </div>
+                    
+                    <form id="donation-form">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email (optional)</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" class="form-control" id="amount" placeholder="Enter amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" id="message" rows="3" placeholder="Enter your message"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-custom btn-block" id="pay-button">Donate Now</button>
+                    </form>
+                </div>
+            </div>
 
-    // Function to generate random donation data
-    function getRandomDonationData() {
-        const donatorNames = ["Ram", "Shyam", "Sita", "Gita"];
-        const randomDonatorName = donatorNames[Math.floor(Math.random() * donatorNames.length)];
-        const randomAmount = Math.floor(Math.random() * 500) + 1;  // Random amount between 1 and 500
-        const randomMessage = "hahah";  // Fixed message for testing
+            <!-- Top Donors List -->
+            <div class="top-donators mt-4">
+                <h3>Top Donators</h3>
+                <ul class="list-group">
+                    {% for donator in donators %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ donator.donator_name }}</span>
+                        <span class="badge bg-primary rounded-pill"> NPR{{ donator.donation_amount }} NPR</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">No donators yet. Be the first one to donate to {{donation_page_details.username}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 
-        return {
-            donator_name: randomDonatorName,
-            donation_amount: randomAmount,
-            donation_message: randomMessage
-        };
-    }
+    <!-- Payment Options Popup -->
+    <div class="overlay" id="payment-overlay"></div>
+    <div class="popup" id="payment-popup">
+        <h4>Select Payment Method</h4>
+        <button class="btn btn-primary btn-block" id="esewa-button">Esewa</button>
+        <button class="btn btn-info btn-block" id="khalti-button">Khalti</button>
+        <button class="btn btn-danger btn-block" id="cancel-button">Cancel</button>
+    </div>
 
-    // Event listener for button click
-    document.getElementById("donate-button").addEventListener("click", () => {
-        const donationData = getRandomDonationData();
-        console.log("Sending donation data:", donationData);
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-        // Send donation data to WebSocket
-        ws.send(JSON.stringify(donationData));
-    });
-</script>
+    <script>
+        // WebSocket connection
+        const ws = new WebSocket(`ws://${window.location.host}/ws/alert/{{alert_detail.alert_id}}/`);
+
+        // Open payment options popup
+        document.getElementById("pay-button").addEventListener("click", () => {
+            document.getElementById("payment-popup").style.display = "block";
+            document.getElementById("payment-overlay").style.display = "block";
+        });
+
+        // Handle payment options
+        document.getElementById("esewa-button").addEventListener("click", () => {
+            alert("Esewa selected");
+            closePopup();
+        });
+        document.getElementById("khalti-button").addEventListener("click", () => {
+            alert("Khalti selected");
+            closePopup();
+        });
+        document.getElementById("cancel-button").addEventListener("click", closePopup);
+
+        // Close popup
+        function closePopup() {
+            document.getElementById("payment-popup").style.display = "none";
+            document.getElementById("payment-overlay").style.display = "none";
+        }
+    </script>
 
 </body>
+
 </html>

@@ -247,6 +247,38 @@
             </div>
         </nav>
 
+        <div class="main-content">
+            <h1 class="mb-4">Transaction History</h1>
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{transaction.appeal_date}}</td>
+                                <td>Rs. {{ transaction.payout_amount }}</td>
+                                <td><span class="badge bg-success">{{ transaction.payout_status|title }}</span></td>
+                                <td>Withdrawn to {{transaction.payout_method}}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No completed transactions found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
 
         
     

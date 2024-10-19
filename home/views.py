@@ -2,7 +2,7 @@ from django.shortcuts import render , HttpResponse , redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.contrib import messages
-from home.models import TotalDonation , Donation , PayoutRequest , Support , Annoucement
+from home.models import TotalDonation , Donation , PayoutRequest , Support , Annoucement , Alert
 # Create your views here.
 def home_page(request):
     return render(request,"home/index.html")
@@ -93,15 +93,46 @@ def alert_setup_page(request):
         return render(request,"home/alert_setup.html")
 def payout_request_page(request):
     if request.user.is_authenticated:
-        return render(request,"home/payout_request.html")
+        if request.method == "POST":
+            username = request.user
+            payout_amount = request.POST.get('amount')
+            payout_method = request.POST.get('payment_method')
+            payout_account = request.POST.get('payment_account')
+            request_payout = PayoutRequest.objects.create(username=username,payout_account=payout_account,payout_method=payout_method,payout_amount=payout_amount)
+            request_payout.save()
+            messages.success(request,"We have got your payout request.")
+            return redirect("payout_request_page")
+    
+        try:
+         total_donation = TotalDonation.objects.get(username=request.user).total_donation
+        except TotalDonation.DoesNotExist:
+         total_donation = 0
+        payout_requests = PayoutRequest.objects.filter(username=request.user).order_by('-appeal_date')
+        return render(request,"home/payout_request.html",{"total_donation":total_donation , "payout_requests":payout_requests})
     return redirect("/login/")
+
     
 def transcations_history_page(request):
     if request.user.is_authenticated:
-        return render(request,"home/transcations_history.html")
+        completed_transactions = PayoutRequest.objects.filter(username=request.user).order_by('-appeal_date')
+        return render(request,"home/transcations_history.html", {'transactions': completed_transactions})
     return redirect("/login/")
 
 def donations_page(request):
     if request.user.is_authenticated:
-        return render(request,"home/donations.html")
+        recent_donations = Donation.objects.filter(username=request.user).order_by('-donation_date')
+        return render(request,"home/donations.html",{"recent_donations":recent_donations})
     return redirect("/login/")
+
+def alert_page(request ,alert_id):
+    if Alert.objects.filter(alert_id=alert_id).exists():
+        alert_detail = Alert.objects.get(alert_id=alert_id)
+        return render(request,"home/alert_page.html",{"alert_detail":alert_detail})
+    return HttpResponse("404 PAGE NOT FOUND")
+
+def donate_page(request, username):
+    if User.objects.filter(username=username).exists():
+        user = User.objects.get(username=username)
+        alert_detail = Alert.objects.get(username=user)
+        return render(request,"home/donate_page.html",{"alert_detail":alert_detail})
+    return HttpResponse("404 Page not found!")

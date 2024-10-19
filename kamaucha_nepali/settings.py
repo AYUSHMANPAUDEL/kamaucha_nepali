@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-eim$fi!vy)cfol3m_0+bbz@io2$(0a-aj_nw5dou1qu8bkw$wk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["away-peers.gl.at.ply.gg","127.0.0.1"]
 
 
 # Application definition
@@ -132,3 +132,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+import os
+MEDIA_URL = '/media/'  # The URL endpoint for accessing media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') 

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate Page</title>
+</head>
+<body>
+
+<h1>Donate Page</h1>
+<button id="donate-button">Send Random Donation</button>
+
+<script>
+    // Create a WebSocket connection
+    const ws = new WebSocket(`ws://${window.location.host}/ws/alert/{{alert_detail.alert_id}}/`);
+
+    // Function to generate random donation data
+    function getRandomDonationData() {
+        const donatorNames = ["Ram", "Shyam", "Sita", "Gita"];
+        const randomDonatorName = donatorNames[Math.floor(Math.random() * donatorNames.length)];
+        const randomAmount = Math.floor(Math.random() * 500) + 1;  // Random amount between 1 and 500
+        const randomMessage = "hahah";  // Fixed message for testing
+
+        return {
+            donator_name: randomDonatorName,
+            donation_amount: randomAmount,
+            donation_message: randomMessage
+        };
+    }
+
+    // Event listener for button click
+    document.getElementById("donate-button").addEventListener("click", () => {
+        const donationData = getRandomDonationData();
+        console.log("Sending donation data:", donationData);
+
+        // Send donation data to WebSocket
+        ws.send(JSON.stringify(donationData));
+    });
+</script>
+
+</body>
+</html>

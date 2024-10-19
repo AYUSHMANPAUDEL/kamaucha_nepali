@@ -227,26 +227,78 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="content flex-grow-1">
-        <!-- Top Navbar -->
-        <nav class="top-navbar d-flex justify-content-between align-items-center">
-            <div>
-                <button class="btn btn-primary" id="sidebarToggle">
-                    <i class="bi bi-list"></i>
-                </button>
-            </div>
-            <div class="d-flex align-items-center">
-                <!-- Personalized Greeting in Navbar -->
-                <span class="me-3 fw-semibold">Hello, {{ user.username }}!</span>
-                <a href="#" class="btn btn-outline-secondary me-2" title="Notifications">
-                    <i class="bi bi-bell"></i>
-                </a>
-                <a href="#" class="btn btn-outline-secondary" title="Settings">
-                    <i class="bi bi-gear"></i>
-                </a>
-            </div>
-        </nav>
+   <!-- Main Content -->
+<div class="content flex-grow-1">
+    <!-- Top Navbar -->
+    <nav class="top-navbar d-flex justify-content-between align-items-center">
+        <div>
+            <button class="btn btn-primary" id="sidebarToggle">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+        <div class="d-flex align-items-center">
+            <!-- Personalized Greeting in Navbar -->
+            <span class="me-3 fw-semibold">Hello, {{ user.username }}!</span>
+            <a href="#" class="btn btn-outline-secondary me-2" title="Notifications">
+                <i class="bi bi-bell"></i>
+            </a>
+            <a href="#" class="btn btn-outline-secondary" title="Settings">
+                <i class="bi bi-gear"></i>
+            </a>
+        </div>
+    </nav>
 
+    <!-- Dashboard Main Section -->
+    <div class="container main-content">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Recent Tips Card -->
+                <div class="card h-100 shadow-lg border-0" style="border-radius: 15px; background: linear-gradient(135deg, #00c6ff, #0072ff); color: white;">
+                    <div class="card-header text-center fw-bold" style="font-size: 1.5rem; letter-spacing: 1px;">
+                        Recent Donations
+                    </div>
+                    <div class="card-body p-4">
+                        <ul class="list-group list-group-flush">
+                            {% for donation in recent_donations %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent" style="color: white; font-size: 1.1rem;">
+                                    {{ donation.donator_name }}
+                                    <span class="badge bg-info rounded-pill">NPR {{ donation.donation_amount }}</span>
+                                </li>
+                            {% empty %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent" style="color: white; font-size: 1.1rem;">
+                                    No recent donations.
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styling for hover effects and padding -->
+<style>
+    .card-header {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .list-group-item {
+        transition: transform 0.2s, background-color 0.3s;
+    }
+    
+    .list-group-item:hover {
+        transform: scale(1.02);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Adjust badge styling */
+    .badge {
+        font-size: 1rem;
+        padding: 0.5em 1em;
+        transition: all 0.3s ease;
+    }
+</style>
 
         
     

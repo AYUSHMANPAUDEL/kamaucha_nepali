@@ -13,4 +13,6 @@ urlpatterns = [
    path("dashboard/payout_request_page/", views.payout_request_page,name="payout_request_page"),
    path("dashboard/transcations_history_page",views.transcations_history_page,name="transcations_history_page"),
    path("dashboard/donations_page",views.donations_page,name="donations_page"),
+   path("alert/<str:alert_id>",views.alert_page , name="alert_page"),
+   path("donate/<str:username>",views.donate_page , name="donate_page"),
 ]

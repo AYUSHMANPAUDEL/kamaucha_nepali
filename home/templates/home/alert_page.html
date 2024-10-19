@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white; /* Default text color */
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Prevent scroll bars */
+            background-color: #fff; /* Add a white background */
+        }
+
+        .alert-container {
+            position: relative;
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background for contrast */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .alert-image {
+            width: 100%; /* Adjust as needed */
+            height: auto;
+            border-radius: 10px; /* Rounded corners for the image */
+        }
+
+        .donation-info {
+            margin-top: 10px;
+        }
+
+        .donator-name {
+            color: #f1c40f; /* Gold color for the donator's name */
+            font-weight: bold; /* Make it bold */
+            font-size: 1.5em; /* Increase font size */
+        }
+
+        .donation-amount {
+            color: #e74c3c; /* Red color for the donation amount */
+            font-weight: bold; /* Make it bold */
+            font-size: 1.2em; /* Increase font size */
+        }
+
+        .donation-message {
+            color: #ffffff; /* White color for the donation message */
+            font-size: 1em; /* Default font size */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="alert-container" class="alert-container" style="display: none;">
+    <img id="alert-image" class="alert-image" src="{{ alert_detail.alert_image.url }}" alt="Alert Image">
+    <div class="donation-info">
+        <h2 id="donator-name" class="donator-name"></h2>
+        <p id="donation-amount" class="donation-amount"></p>
+        <p id="donation-message" class="donation-message"></p>
+    </div>
+</div>
+
+<audio id="alert-sound" src="{{ alert_detail.alert_sound.url }}" preload="auto"></audio>
+
+<script>
+    const alertContainer = document.getElementById('alert-container');
+    const donatorName = document.getElementById('donator-name');
+    const donationAmount = document.getElementById('donation-amount');
+    const donationMessage = document.getElementById('donation-message');
+    const alertSound = document.getElementById('alert-sound');
+
+    const alertQueue = [];  // Queue for incoming alerts
+    let isPlaying = false;  // Flag to check if sound is currently playing
+
+    const pathParts = window.location.pathname.split('/');
+    const userId = pathParts[pathParts.length - 1];
+    console.log(userId);
+    const ws = new WebSocket(`ws://${window.location.host}/ws/alert/${userId}/`);
+    
+    ws.onopen = function () {
+        console.log("WebSocket connection opened");
+    };
+
+    ws.onmessage = function(event) {
+        console.log("Got the data!");
+        const data = JSON.parse(event.data);
+        console.log(data);
+        alertQueue.push(data);  // Add the new donation data to the queue
+        processQueue();         // Process the queue
+    };
+
+    function processQueue() {
+        if (isPlaying || alertQueue.length === 0) {
+            return;  // If already playing or queue is empty, return
+        }
+    
+        const data = alertQueue.shift();  // Get the next alert data
+        console.log("Processing alert:", data); // Debugging log
+        donatorName.textContent = `${data.donator_name} just tipped Rs. ${data.donation_amount}`; // Updated message format
+        donationMessage.textContent = data.donation_message; // Retain the original donation message if needed
+    
+        // Show the alert container
+        alertContainer.style.display = 'block';
+    
+        // Play the sound
+        alertSound.currentTime = 0; // Reset sound to start
+        isPlaying = true;  // Set the flag to true
+    
+        alertSound.play().catch(err => {
+            console.error("Audio play failed:", err);
+        });
+    
+        // Add an event listener for when the sound finishes playing
+        alertSound.onended = function() {
+            alertContainer.style.display = 'none';  // Hide the alert after the sound has finished
+            isPlaying = false;  // Reset the flag
+            processQueue();  // Process the next alert in the queue
+        };
+    }
+</script>
+
+</body>
+</html>

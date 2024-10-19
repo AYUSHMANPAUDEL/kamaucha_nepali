@@ -3,5 +3,5 @@ from . import consumers
 
 
 websocket_urlpatterns =[
-#   path('ws/sc/',consumers.mysyncconsumer.as_asgi())
+  path('ws/alert/<str:userId>/',consumers.alert_consumer.as_asgi()),
 ]

@@ -2,7 +2,7 @@ from django.shortcuts import render , HttpResponse , redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.contrib import messages
-from home.models import TotalDonation , Donation , PayoutRequest , Support , Annoucement , Alert
+from home.models import TotalDonation , Donation , PayoutRequest , Support , Annoucement , Alert , Donation_page
 # Create your views here.
 def home_page(request):
     return render(request,"home/index.html")
@@ -85,12 +85,50 @@ def support_page(request):
 
 def donation_page_setup(request):
     if request.user.is_authenticated:
-        return render(request,"home/donation_setup_page.html")
+        # Fetch existing donation page details
+        donation_page_details = Donation_page.objects.get(username=request.user)
+
+        if request.method == "POST":
+            # Get uploaded file and donation message from the request
+            profile_picture = request.FILES.get("profile_picture")  # Use request.FILES for file uploads
+            page_message = request.POST.get("donation_message")
+
+            # Update donation page details
+            if profile_picture:
+                donation_page_details.profile_picture = profile_picture  # Set new profile picture if provided
+
+            donation_page_details.page_message = page_message  # Update donation message
+
+            # Save the updated donation page details
+            donation_page_details.save()
+
+            return redirect("donation_setup_page")
+
+        return render(request, "home/donation_setup_page.html", {"donation_page_details": donation_page_details})
+
     return redirect("/login/")
 
 def alert_setup_page(request):
     if request.user.is_authenticated:
-        return render(request,"home/alert_setup.html")
+        current_alert = Alert.objects.get(username=request.user)
+
+        if request.method == 'POST':
+            # Get alert image and sound from the request
+            alert_image = request.FILES.get('alert_image')
+            alert_sound = request.FILES.get('alert_sound')
+
+            # Update the current alert if files are provided
+            if alert_image:
+                current_alert.alert_image = alert_image
+            if alert_sound:
+                current_alert.alert_sound = alert_sound
+
+            current_alert.save()
+            return redirect('alert_setup_page')  # Redirect to the same page after saving
+
+        return render(request, "home/alert_setup.html", {"current_alert": current_alert})
+
+    return redirect('login_page')
 def payout_request_page(request):
     if request.user.is_authenticated:
         if request.method == "POST":
@@ -134,5 +172,7 @@ def donate_page(request, username):
     if User.objects.filter(username=username).exists():
         user = User.objects.get(username=username)
         alert_detail = Alert.objects.get(username=user)
-        return render(request,"home/donate_page.html",{"alert_detail":alert_detail})
+        donation_page_details = Donation_page.objects.get(username=user)
+        donators = Donation.objects.filter(username=user).order_by('-donation_amount')[:10]
+        return render(request,"home/donate_page.html",{"alert_detail":alert_detail, "donation_page_details":donation_page_details, "donators":donators})
     return HttpResponse("404 Page not found!")

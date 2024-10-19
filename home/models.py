@@ -123,3 +123,17 @@ class Alert(models.Model):  # Renamed to Alert for consistency
 def create_user_alert(sender, instance, created, **kwargs):
     if created:
         Alert.objects.create(username=instance)
+
+class Donation_page(models.Model):
+    username = models.ForeignKey(User , on_delete=models.CASCADE)
+    profile_picture = models.ImageField(upload_to='profiles/',default="profiles/default__user_pfp.jpg")
+    page_message = models.TextField(default="")
+    
+    def __str__(self):
+        return f"{self.username}"
+
+@receiver(post_save, sender=User)
+def create_user_alert(sender, instance, created, **kwargs):
+    if created:
+        Donation_page.objects.create(username=instance)
+

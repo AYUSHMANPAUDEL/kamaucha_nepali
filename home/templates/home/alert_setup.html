@@ -247,8 +247,56 @@
             </div>
         </nav>
 
+        <div class="content flex-grow-1">
+            <div class="main-content">
+                <h1 class="greeting">Alert Setup</h1>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="alert_image" class="form-label">Alert Image</label>
+                        <input type="file" class="form-control" id="alert_image" name="alert_image" accept="image/*" onchange="previewImage(event)">
+                        <img id="image_preview" src="{{ current_alert.alert_image.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
 
+                    </div>
+                    <div class="mb-3">
+                        <label for="alert_sound" class="form-label">Alert Sound</label>
+                        <input type="file" class="form-control" id="alert_sound" name="alert_sound" accept="audio/*" onchange="previewSound(event)">
+                        <audio id="sound_preview" controls style="display: block; margin-top: 10px;">
+                            <source src="{{ current_alert.alert_sound.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            function previewImage(event) {
+                const imagePreview = document.getElementById('image_preview');
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                }
+                
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    imagePreview.src = '';
+                }
+            }
         
+            function previewSound(event) {
+                const soundPreview = document.getElementById('sound_preview');
+                const file = event.target.files[0];
+                const url = URL.createObjectURL(file);
+                
+                soundPreview.src = url;
+                soundPreview.style.display = 'block'; // Show audio controls
+            }
+        </script>
     
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

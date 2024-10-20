@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting to eSewa</title>
+</head>
+
+<body>
+    <script>
+        // Values received from the Django backend
+        var amount = {{ amount }};  // Use without quotes for numbers
+        var transaction_uuid = "{{ transaction_uuid }}";
+        var product_code = "{{ product_code }}";
+        var signature = "{{ signature }}";  // Signature generated on the backend
+
+        // Redirect to eSewa
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+
+        // Append all required fields to the form
+        var fields = {
+            'amount':amount,
+            'tax_amount':0,
+            'total_amount': amount,
+            'transaction_uuid': transaction_uuid,
+            'product_code': product_code,
+            'product_service_charge': '0',
+            'product_delivery_charge': '0',
+            'success_url': 'http://127.0.0.1:8000/esewa/success',  // Replace with actual success URL
+            'failure_url': 'http://your-failure-url.com',  // Replace with actual failure URL
+            'signed_field_names': 'total_amount,transaction_uuid,product_code', // Ensure these are correct
+            'signature': signature,
+        };
+
+        for (var key in fields) {
+            if (fields.hasOwnProperty(key)) {
+                var hiddenField = document.createElement("input");
+                hiddenField.type = "hidden";
+                hiddenField.name = key;
+                hiddenField.value = fields[key];
+                form.appendChild(hiddenField);
+            }
+        }
+
+        // Append and submit the form
+        document.body.appendChild(form);
+        form.submit();
+    </script>
+</body>
+
+</html>

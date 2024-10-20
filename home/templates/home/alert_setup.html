@@ -160,6 +160,17 @@
 .sidebar.collapsed .nav-link span {
     display: none;
 }
+.tip-url-container input {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+.tip-url-container input:hover,
+.tip-url-container input:focus {
+    filter: none;
+}
+.tip-url-container button {
+    margin-left: 10px;
+}
 
 
     </style>
@@ -246,7 +257,18 @@
                 </a>
             </div>
         </nav>
-
+        <div class="tip-url-section mt-5">
+            <label for="tip-url">Tip URL</label>
+            <div class="tip-url-container d-flex">
+                <input type="text" id="tip-url" class="form-control" readonly>
+                <button id="copy-btn" class="btn btn-primary">Copy</button>
+                <button id="test-alert-btn" class="btn btn-warning">Test Alert</button>
+                <button id="launch-btn" class="btn btn-success">Launch</button>
+            </div>
+            <p>Use the URL as a Browser Source in your Streaming Software like OBS Studio or Streamlabs OBS. Don't share this link with anyone.</p>
+        </div>
+        
+        
         <div class="content flex-grow-1">
             <div class="main-content">
                 <h1 class="greeting">Alert Setup</h1>
@@ -297,6 +319,59 @@
                 soundPreview.style.display = 'block'; // Show audio controls
             }
         </script>
+        <script>
+            // Get the current URL and extract the base URL (protocol + domain + port)
+            const currentUrl = window.location.origin;  // This gives you the base URL like 'http://127.0.0.1:8000'
+            
+            // Construct the full Tip URL by appending the alert path
+            const alertId = "{{ current_alert.alert_id }}";  // Replace this with the actual alert ID from the backend
+            const tipUrl = `${currentUrl}/alert/${alertId}`;
+            const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            const socketUrl = `${protocol}${window.location.host}/ws/alert/${alertId}/`;
+
+            // WebSocket setup
+            const ws = new WebSocket(socketUrl);
+        
+            // Set the Tip URL in the input field
+            document.getElementById('tip-url').value = tipUrl;
+        
+            // Copy Tip URL to clipboard
+            document.getElementById('copy-btn').addEventListener('click', function() {
+                const tipUrlInput = document.getElementById('tip-url');
+                tipUrlInput.select();
+                document.execCommand('copy');
+                alert('Tip URL copied to clipboard!');
+            });
+            function sendTestAlert() {
+                // Generate random test data for donation
+                const testData = {
+                    donator_name: `User_${Math.floor(Math.random() * 1000)}`,
+                    donation_amount: (Math.random() * 100).toFixed(2),  // Random amount between 0 and 100
+                    donation_message: "This is a test alert!",
+                };
+            
+                // Send the test data as a JSON string
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify(testData));
+                    console.log('Test alert sent:', testData);
+                } else {
+                    console.error('WebSocket is not open.');
+                }
+            }
+            
+            // Add event listener for the Test Alert button
+            const testAlertBtn = document.getElementById('test-alert-btn');
+            testAlertBtn.addEventListener('click', sendTestAlert);
+        
+            // Test Alert button functionality
+        
+            // Launch button functionality
+            document.getElementById('launch-btn').addEventListener('click', function() {
+                const launchUrl = `${currentUrl}/alert/${alertId}`;
+                window.open(launchUrl, '_blank');
+            });
+        </script>
+        
     
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

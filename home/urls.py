@@ -15,4 +15,5 @@ urlpatterns = [
    path("dashboard/donations_page",views.donations_page,name="donations_page"),
    path("alert/<str:alert_id>",views.alert_page , name="alert_page"),
    path("donate/<str:username>",views.donate_page , name="donate_page"),
+   path("esewa/success",views.esewa_success,name="esewa_success")
 ]

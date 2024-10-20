@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Payment</title>
+</head>
+<body>
+    <h1>Processing Your Payment...</h1>
+
+    <script>
+        const currentUrl = window.location.origin;
+        const alertId = "{{alert_id}}";  // Replace this with the actual alert ID from the backend
+        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const socketUrl = `${protocol}${window.location.host}/ws/alert/${alertId}/`;
+        const ws = new WebSocket(socketUrl);
+
+        // Data from the Django template
+        const donatorName = "{{transcation.donator_name }}";
+        const donationAmount = "{{transcation.donation_amount }}";
+        const donationMessage = "{{transcation.donation_message }}";
+
+        // Prepare the test data
+        const Data = {
+            donator_name: donatorName,
+            donation_amount: donationAmount,
+            donation_message: donationMessage,
+        };
+
+        // Send the data and redirect the user
+        ws.onopen = function () {
+            ws.send(JSON.stringify(Data));
+            console.log('Alert sent:', Data);
+
+            // Redirect to a thank you page or another page after sending data
+            window.location.href = "/";
+        };
+
+        ws.onerror = function (error) {
+            console.error('WebSocket Error:', error);
+
+            // Redirect anyway, even if there's an error
+            window.location.href = "/";
+        };
+    </script>
+</body>
+</html>

@@ -8,6 +8,8 @@ import hashlib
 import hmac
 import base64
 import json
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 # Create your views here.
 def home_page(request):
     return render(request,"home/index.html")
@@ -236,5 +238,16 @@ def esewa_success(request):
     product_code = payment_data.get('product_code')
     print("the transcationuiuid is :")
     print(transaction_uuid)
+    try:
+        transaction = Donation.objects.get(transaction_uuid=transaction_uuid)
+        username = transaction.username
+        user = User.objects.get(username=username)
+        transaction.donation_status = 'Completed'  # Update the status
+        transaction.save()
+        alert = Alert.objects.get(username=user)
+        alert_id = alert.alert_id
+        return render(request,"home/esewa_success.html",{"transcation":transaction , "alert_id":alert_id})
+    except Donation.DoesNotExist:
+        return HttpResponse("Error Occured")
     return redirect("/")
 

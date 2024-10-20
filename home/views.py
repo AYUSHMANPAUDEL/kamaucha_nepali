@@ -1,8 +1,13 @@
-from django.shortcuts import render , HttpResponse , redirect
+from django.shortcuts import render , HttpResponse , redirect , HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.contrib import messages
 from home.models import TotalDonation , Donation , PayoutRequest , Support , Annoucement , Alert , Donation_page
+import uuid
+import hashlib
+import hmac
+import base64
+import json
 # Create your views here.
 def home_page(request):
     return render(request,"home/index.html")
@@ -168,11 +173,68 @@ def alert_page(request ,alert_id):
         return render(request,"home/alert_page.html",{"alert_detail":alert_detail})
     return HttpResponse("404 PAGE NOT FOUND")
 
+def generate_signature(amount, transaction_uuid, product_code, secret_key):
+    data = f"total_amount={amount},transaction_uuid={transaction_uuid},product_code={product_code}"
+    hmac_signature = hmac.new(secret_key.encode('utf-8'), data.encode('utf-8'), hashlib.sha256).digest()
+    signature = base64.b64encode(hmac_signature).decode('utf-8')
+    return signature
+
+
 def donate_page(request, username):
     if User.objects.filter(username=username).exists():
+        if request.method == "POST":
+            method = request.POST.get("method")
+            if method == "esewa":
+                donator_name = request.POST.get("donator_name")
+                donation_amount = int(request.POST.get('donation_amount'))
+                donation_message = request.POST.get('donation_message')
+                transaction_uuid = 'TXN_' + str(uuid.uuid4())
+                secret_key = "8gBm/:&EnhH.1/q"  # Ensure this is correct
+                product_code = "EPAYTEST"
+                user = User.objects.get(username=username)
+                donation = Donation.objects.create(username=user,donator_name=donator_name,donation_message=donation_message,donation_amount=donation_amount,transaction_uuid=transaction_uuid)
+                donation.save()
+                # Generate the data string for signature
+                signature = generate_signature(donation_amount, transaction_uuid, product_code, secret_key)
+                print(signature)    
+                # Prepare context for the redirect page
+                context = {
+                'amount': donation_amount,  # Example amount
+                'transaction_uuid': transaction_uuid,
+                'product_code': product_code,
+                'signature': signature
+                }
+                
+
+                # Render the esewa_redirect.html with the context
+                return render(request, "home/esewa_redirect.html", context)
+            else:
+                return HttpResponse("Khalti coming soon!")
+
+        # Fetch user data for GET request
         user = User.objects.get(username=username)
         alert_detail = Alert.objects.get(username=user)
         donation_page_details = Donation_page.objects.get(username=user)
         donators = Donation.objects.filter(username=user).order_by('-donation_amount')[:10]
-        return render(request,"home/donate_page.html",{"alert_detail":alert_detail, "donation_page_details":donation_page_details, "donators":donators})
+
+        return render(request, "home/donate_page.html", {
+            "alert_detail": alert_detail,
+            "donation_page_details": donation_page_details,
+            "donators": donators
+        })
+
     return HttpResponse("404 Page not found!")
+
+def esewa_success(request):
+    encoded_data = request.GET.get('data')
+    decoded_data = base64.b64decode(encoded_data).decode('utf-8')
+    payment_data = json.loads(decoded_data)
+    transaction_code = payment_data.get('transaction_code')
+    status = payment_data.get('status')
+    total_amount = payment_data.get('total_amount')
+    transaction_uuid = payment_data.get('transaction_uuid')
+    product_code = payment_data.get('product_code')
+    print("the transcationuiuid is :")
+    print(transaction_uuid)
+    return redirect("/")
+

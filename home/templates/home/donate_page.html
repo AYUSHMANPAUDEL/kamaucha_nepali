@@ -135,10 +135,11 @@
                         <p class="donation-recipient-message">{{donation_page_details.page_message}}</p>
                     </div>
                     
-                    <form id="donation-form">
+                    <form id="donation-form"  method="POST">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                            <input type="text" class="form-control" name="donator_name" id="donator_name" placeholder="Enter your username" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email (optional)</label>
@@ -146,11 +147,11 @@
                         </div>
                         <div class="form-group">
                             <label for="amount">Amount</label>
-                            <input type="number" class="form-control" id="amount" placeholder="Enter amount" required>
+                            <input type="number" class="form-control" id="amount" name="donation_amount" placeholder="Enter amount" required>
                         </div>
                         <div class="form-group">
                             <label for="message">Message</label>
-                            <textarea class="form-control" id="message" rows="3" placeholder="Enter your message"></textarea>
+                            <textarea class="form-control" name="donation_message" id="donation_message" rows="3" placeholder="Enter your message"></textarea>
                         </div>
                         <button type="button" class="btn btn-custom btn-block" id="pay-button">Donate Now</button>
                     </form>
@@ -159,20 +160,23 @@
 
             <!-- Top Donors List -->
             <div class="top-donators mt-4">
-                <h3>Top Donators</h3>
+                <h3>Top Donors</h3>
                 <ul class="list-group">
+                    {% if donators %}
                     {% for donator in donators %}
+                    {% if donator.donation_status == "Completed" %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span>{{ donator.donator_name }}</span>
-                        <span class="badge bg-primary rounded-pill"> NPR{{ donator.donation_amount }} NPR</span>
+                        <span class="badge bg-primary rounded-pill">NPR {{ donator.donation_amount }}</span>
                     </li>
-                    {% empty %}
-                    <li class="list-group-item">No donators yet. Be the first one to donate to {{donation_page_details.username}}</li>
+                    {% endif %}
                     {% endfor %}
+                    {% else %}
+                    <li class="list-group-item">No donors yet. Be the first one to donate to {{ donation_page_details.username }}</li>
+                    {% endif %}
                 </ul>
             </div>
-        </div>
-    </div>
+            
 
     <!-- Payment Options Popup -->
     <div class="overlay" id="payment-overlay"></div>
@@ -200,20 +204,29 @@
 
         // Handle payment options
         document.getElementById("esewa-button").addEventListener("click", () => {
-            alert("Esewa selected");
-            closePopup();
+            // Set a hidden input to indicate the payment method
+            const form = document.getElementById('donation-form');
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = 'method';
+            methodInput.value = 'esewa';
+            form.appendChild(methodInput);
+            form.submit(); // Submit the form
         });
+
         document.getElementById("khalti-button").addEventListener("click", () => {
             alert("Khalti selected");
             closePopup();
         });
+
         document.getElementById("cancel-button").addEventListener("click", closePopup);
 
         // Close popup
         function closePopup() {
             document.getElementById("payment-popup").style.display = "none";
             document.getElementById("payment-overlay").style.display = "none";
-        }
+        }  document.getElementById("payment-overlay").style.display = "none";
+        
     </script>
 
 </body>

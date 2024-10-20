@@ -7,11 +7,22 @@ import random
 import string
 # Create your models here.
 class Donation(models.Model):
+    PENDING = 'Pending'
+    Completed = 'Completed'
+    Status_Choices = [
+        (PENDING, 'Pending'),
+        (Completed, 'Completed'),]
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     donator_name = models.TextField(max_length=200)
     donation_amount = models.IntegerField()
     donation_date = models.DateField(auto_now_add=True)
     donation_message = models.TextField(default="")
+    transaction_uuid = models.TextField(default="")
+    donation_status = models.CharField(
+        max_length=20,
+        choices=Status_Choices,
+        default=PENDING,
+    )
 
     def __str__(self):
         return f"{self.username}"

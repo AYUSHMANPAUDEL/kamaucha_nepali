@@ -215,8 +215,13 @@
         });
 
         document.getElementById("khalti-button").addEventListener("click", () => {
-            alert("Khalti selected");
-            closePopup();
+            const form = document.getElementById('donation-form');
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = 'method';
+            methodInput.value = 'khalti';
+            form.appendChild(methodInput);
+            form.submit(); // Submit the form
         });
 
         document.getElementById("cancel-button").addEventListener("click", closePopup);

@@ -10,6 +10,8 @@ import base64
 import json
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.conf import settings
+import requests
 # Create your views here.
 def home_page(request):
     return render(request,"home/index.html")
@@ -211,8 +213,48 @@ def donate_page(request, username):
                 # Render the esewa_redirect.html with the context
                 return render(request, "home/esewa_redirect.html", context)
             else:
-                return HttpResponse("Khalti coming soon!")
+                donator_name = request.POST.get("donator_name")
+                donation_amount = int(request.POST.get('donation_amount'))*100  
+                donation_message = request.POST.get('donation_message')
+                transaction_uuid = 'TXN_' + str(uuid.uuid4())
+                secret_key = "8gBm/:&EnhH.1/q"  # Ensure this is correct
+                product_code = "EPAYTEST"
+                user = User.objects.get(username=username)
+                donation = Donation.objects.create(username=user,donator_name=donator_name,donation_message=donation_message,donation_amount=donation_amount/100,transaction_uuid=transaction_uuid)
+                donation.save()
 
+
+                url = "https://a.khalti.com/api/v2/epayment/initiate/"
+
+                payload = json.dumps({
+                    "return_url": "http://127.0.0.1:8000/khalti/success",
+                    "website_url": "http://127.0.0.1:8000/",
+                    "amount": donation_amount,
+                    "purchase_order_id": transaction_uuid,
+                    "purchase_order_name": donator_name,
+                })
+                headers = {
+                    'Authorization': f'key {settings.KHALTI_SECRET_KEY}',
+                    'Content-Type': 'application/json',
+                }
+
+                response = requests.request("POST", url, headers=headers, data=payload)
+
+                if response.status_code == 200:
+                            response_data = response.json()
+                            payment_url = response_data.get('payment_url')
+
+                            # Add the payment_url to the context for the Khalti redirect page
+                            context = {
+                                'payment_url': payment_url
+                            }
+
+                            return render(request, "home/khalti_redirect.html", context)
+                else:
+                            # Handle error
+                    error_message = response.content.decode('utf-8')
+                    print(f"Khalti API Error: {error_message}")
+                    return HttpResponse(f"Failed to initiate Khalti payment. Error: {error_message}")
         # Fetch user data for GET request
         user = User.objects.get(username=username)
         alert_detail = Alert.objects.get(username=user)
@@ -251,3 +293,19 @@ def esewa_success(request):
         return HttpResponse("Error Occured")
     return redirect("/")
 
+def khalti_success(request):
+    transaction_uuid = request.GET.get('purchase_order_id') 
+    print("the transcationuiuid is :")
+    print(transaction_uuid)
+    try:
+        transaction = Donation.objects.get(transaction_uuid=transaction_uuid)
+        username = transaction.username
+        user = User.objects.get(username=username)
+        transaction.donation_status = 'Completed'  # Update the status
+        transaction.save()
+        alert = Alert.objects.get(username=user)
+        alert_id = alert.alert_id
+        return render(request,"home/khalti_success.html",{"transcation":transaction , "alert_id":alert_id})
+    except Donation.DoesNotExist:
+        return HttpResponse("Error Occured")
+    return redirect("/")

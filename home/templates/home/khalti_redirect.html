@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khalti Payment</title>
+</head>
+<body>
+    <h1>Redirecting to Khalti...</h1>
+    <p>If you are not automatically redirected, click <a href="{{ payment_url }}">here</a>.</p>
+
+    <script>
+        // Automatically redirect to the Khalti payment URL
+        window.location.href = "{{ payment_url }}";
+    </script>
+</body>
+</html>

@@ -102,18 +102,17 @@ class Annoucement(models.Model):
 @receiver(post_save, sender=PayoutRequest)
 def handle_completed_payout(sender, instance, **kwargs):
     if instance.payout_status == PayoutRequest.COMPLETED:
-        # Get the user's TotalDonation record
+    
         total_donations, created = TotalDonation.objects.get_or_create(username=instance.username)
         
-        # Ensure the total donation is not negative after payout
         if total_donations.total_donation >= instance.payout_amount:
             total_donations.total_donation -= instance.payout_amount
             total_donations.save()
         else:
-            # Handle cases where payout amount exceeds total donations
+
             print("Insufficient total donation for payout")
 
-class Alert(models.Model):  # Renamed to Alert for consistency
+class Alert(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     alert_id = models.CharField(max_length=8, unique=True, blank=True)
     alert_image = models.ImageField(upload_to='alerts/',default="alerts/default_donation.gif")
@@ -123,9 +122,9 @@ class Alert(models.Model):  # Renamed to Alert for consistency
     def save(self, *args, **kwargs):
         if not self.alert_id:
             while True:
-                # Generate a random alert_id
+    
                 self.alert_id = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-                # Check for uniqueness
+    
                 if not Alert.objects.filter(alert_id=self.alert_id).exists():
                     break
         super().save(*args, **kwargs)

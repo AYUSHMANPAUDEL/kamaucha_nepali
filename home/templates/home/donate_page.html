@@ -159,23 +159,53 @@
             </div>
 
             <!-- Top Donors List -->
-            <div class="top-donators mt-4">
-                <h3>Top Donors</h3>
-                <ul class="list-group">
-                    {% if donators %}
-                    {% for donator in donators %}
-                    {% if donator.donation_status == "Completed" %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>{{ donator.donator_name }}</span>
-                        <span class="badge bg-primary rounded-pill">NPR {{ donator.donation_amount }}</span>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-                    {% else %}
-                    <li class="list-group-item">No donors yet. Be the first one to donate to {{ donation_page_details.username }}</li>
-                    {% endif %}
-                </ul>
+            <div class="col-lg-5 col-md-4 col-sm-12">
+                <div class="top-donors mt-4">
+                    <h3>Top 3 Donors</h3>
+                    <ul class="list-group">
+                        {% if donators %}
+                            {% for donator in donators|slice:":3" %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        {% if forloop.first %}
+                                            <span style="font-weight: bold; color: gold;">👑 {{ donator.donator_name }}</span>
+                                        {% elif forloop.counter == 2 %}
+                                            <span style="font-weight: bold; color: silver;">🥈 {{ donator.donator_name }}</span>
+                                        {% elif forloop.counter == 3 %}
+                                            <span style="font-weight: bold; color: #cd7f32;">🥉 {{ donator.donator_name }}</span>
+                                        {% endif %}
+                                    </span>
+                                    <span class="badge bg-primary rounded-pill">NPR {{ donator.donation_amount }}</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No donors yet. Be the first one to donate to {{ donation_page_details.username }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            
+
+                <!-- Other Donors List -->
+                <div class="all-donators mt-4">
+                    <h3>Other Donors</h3>
+                    <ul class="list-group">
+                        {% if donators|length > 3 %}
+                            {% for donator in donators|slice:"3:" %}
+                                {% if donator.donation_status == "Completed" %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>{{ forloop.counter|add:3 }}. {{ donator.donator_name }}</span>
+                                        <span class="badge bg-primary rounded-pill">NPR {{ donator.donation_amount }}</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No additional donors beyond the top 3.</li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
+        </div>
+
             
 
     <!-- Payment Options Popup -->

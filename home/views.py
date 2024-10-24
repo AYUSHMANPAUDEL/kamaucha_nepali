@@ -259,12 +259,11 @@ def donate_page(request, username):
         user = User.objects.get(username=username)
         alert_detail = Alert.objects.get(username=user)
         donation_page_details = Donation_page.objects.get(username=user)
-        donators = Donation.objects.filter(username=user).order_by('-donation_amount')[:10]
-
+        donators = Donation.objects.filter(username=user,donation_status="Completed").order_by('-donation_amount')[:10]
         return render(request, "home/donate_page.html", {
             "alert_detail": alert_detail,
             "donation_page_details": donation_page_details,
-            "donators": donators
+            "donators": donators , 
         })
 
     return HttpResponse("404 Page not found!")

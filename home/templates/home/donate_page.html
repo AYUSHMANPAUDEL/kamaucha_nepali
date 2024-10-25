@@ -203,6 +203,13 @@
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
         }
+        .form-control:focus {
+            background-color: #1e2434; /* Keeps the dark background on focus */
+            color: #E5E5E5; /* Ensures text color remains light */
+            border-color: #3b97e0; /* Optional: Highlight the border with a color on focus */
+            outline: none; /* Removes the default blue outline */
+        }
+     
     </style>
 </head>
 
@@ -255,35 +262,43 @@
 
             <!-- Top Donors List -->
             <div class="col-lg-5 col-md-4 col-sm-12">
+                <!-- Top Donors List -->
                 <div class="top-donors mt-4">
                     <h3>Top 3 Donors</h3>
                     <div class="donor-container">
-                        {% comment %} {% if donators %}
-                        {% for donator in donators|slice:":3" %}
-                        <div class="donor-position">
-                            <img src="https://i.pinimg.com/originals/da/cd/26/dacd26cb604a023a573e311906b5ec4d.png"
-                                alt="Donor 2" class="donor-image silver">
-                            <p style="color: silver;">🥈 {{ donator.donator_name }}</p>
-                            <span class="badge">{{ donator.donation_amount }}</span>
-                        </div>
-                        <div class="donor-position">
-                            <img src="https://pics.craiyon.com/2023-09-13/aa7c839b5469435ca7f9c31dbe207d3e.webp"
-                                alt="Donor 1" class="donor-image gold">
-                            <p style="color: gold;">👑 Mr.Goldie</p>
-                            <span class="badge">NPR 2500</span>
-                        </div>
-                        <div class="donor-position">
-                            <img src="https://i.pinimg.com/236x/05/1b/a0/051ba0e1cb72ce7503b7f6f3776b79a1.jpg"
-                                alt="Donor 3" class="donor-image bronze">
-                            <p style="color: silver;">🥉 Mr.Bronzie</p>
-                            <span class="badge">NPR 800</span>
-                        </div> {% endcomment %}
+                        {% if donators %}
+                            {% for donator in donators|slice:":3" %}
+                                <div class="donor-position">
+                                    {% if forloop.counter == 1 %}
+                                        <!-- Gold Donor -->
+                                        <img src="https://pics.craiyon.com/2023-09-13/aa7c839b5469435ca7f9c31dbe207d3e.webp"
+                                             alt="Top Donor" class="donor-image gold">
+                                        <p style="color: gold;">👑 {{ donator.donator_name }}</p>
+                                        <span class="badge">{{ donator.donation_amount }}</span>
+                                    {% elif forloop.counter == 2 %}
+                                        <!-- Silver Donor -->
+                                        <img src="https://pics.craiyon.com/2023-09-13/aa7c839b5469435ca7f9c31dbe207d3e.webp"
+                                             alt="Second Donor" class="donor-image silver">
+                                        <p style="color: silver;">🥈 {{ donator.donator_name }}</p>
+                                        <span class="badge">{{ donator.donation_amount }}</span>
+                                    {% elif forloop.counter == 3 %}
+                                        <!-- Bronze Donor -->
+                                        <img src="https://pics.craiyon.com/2023-09-13/aa7c839b5469435ca7f9c31dbe207d3e.webp"
+                                             alt="Third Donor" class="donor-image bronze">
+                                        <p style="color: bronze;">🥉 {{ donator.donator_name }}</p>
+                                        <span class="badge">{{ donator.donation_amount }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No donors available.</p>
+                        {% endif %}
                     </div>
                 </div>
 
-                <!-- All Donors List -->
+                <!-- All Donors List directly below Top Donors -->
                 <div class="all-donators mt-4">
-                    <h3>All Donators</h3>
+                    <h3>Other Donators</h3>
                     <ul class="list-group">
                         {% if donators %}
                         {% for donator in donators|slice:"3:" %}
@@ -295,10 +310,11 @@
                         {% endfor %}
                         {% else %}
                         <li class="list-group-item">No additional donors beyond the top 3.</li>
-                    {% endif %}
+                        {% endif %}
                     </ul>
                 </div>
             </div>
+
         </div>
     </div>
 

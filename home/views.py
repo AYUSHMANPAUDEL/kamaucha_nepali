@@ -96,6 +96,7 @@ def donation_page_setup(request):
     if request.user.is_authenticated:
         # Fetch existing donation page details
         donation_page_details = Donation_page.objects.get(username=request.user)
+        alert_details = Alert.objects.get(username = request.user) #------>alert_id ra latest donation herne ma chaine id autaai ho !
 
         if request.method == "POST":
             # Get uploaded file and donation message from the request
@@ -113,7 +114,7 @@ def donation_page_setup(request):
 
             return redirect("donation_setup_page")
 
-        return render(request, "home/donation_setup_page.html", {"donation_page_details": donation_page_details})
+        return render(request, "home/donation_setup_page.html", {"donation_page_details": donation_page_details , "alert_details":alert_details})
 
     return redirect("/login/")
 
@@ -308,3 +309,9 @@ def khalti_success(request):
     except Donation.DoesNotExist:
         return HttpResponse("Error Occured")
     return redirect("/")
+
+def latest_donations_preview(request,alert_id):
+    if Alert.objects.filter(alert_id=alert_id).exists():
+        alert_detail = Alert.objects.get(alert_id=alert_id)
+        return render(request,"home/latest_donations_page.html",{"alert_detail":alert_detail})
+    return HttpResponse("404 PAGE NOT FOUND")

@@ -16,5 +16,6 @@ urlpatterns = [
    path("alert/<str:alert_id>",views.alert_page , name="alert_page"),
    path("donate/<str:username>",views.donate_page , name="donate_page"),
    path("esewa/success",views.esewa_success,name="esewa_success"),
-   path("khalti/success",views.khalti_success,name="khalti_success")
+   path("khalti/success",views.khalti_success,name="khalti_success"),
+   path("latest/<str:alert_id>",views.latest_donations_preview,name="latest_donations_preview"),
 ]

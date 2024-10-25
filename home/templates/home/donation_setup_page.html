@@ -160,6 +160,17 @@
 .sidebar.collapsed .nav-link span {
     display: none;
 }
+.latest_donation-container input {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+.latest_donation-container input:hover,
+.latest_donation-container input:focus {
+    filter: none;
+}
+.latest_donation-container button {
+    margin-left: 10px;
+}
 
 
     </style>
@@ -255,6 +266,15 @@
             </div>
             <p>Share this link with your supporters</p>
         </div>
+        <div class="latest_donation-url-section mt-6">
+            <label for="latest_donation">Live Donators url</label>
+            <div class="latest_donation-container d-flex">
+                <input type="text" id="latest_donation" class="form-control" readonly>
+                <button id="copy-btn1" class="btn btn-primary">Copy</button>
+                <button id="launch-btn1" class="btn btn-success">Launch</button>
+            </div>
+            <p>Add this link to your streaming software</p>
+        </div>
 
         <div class="container main-content">
             <!-- Page Heading -->
@@ -322,8 +342,8 @@
             const currentUrl = window.location.origin;  // This gives you the base URL like 'http://127.0.0.1:8000'
             
             // Construct the full Tip URL by appending the alert path
-            const alertId = "{{ request.user.username }}";  // Replace this with the actual alert ID from the backend
-            const tipUrl = `${currentUrl}/donate/${alertId}`;
+            const donate_id = "{{ request.user.username }}";  // Replace this with the actual alert ID from the backend
+            const tipUrl = `${currentUrl}/donate/${donate_id}`;
 
         
             // Set the Tip URL in the input field
@@ -335,9 +355,33 @@
                 alert('Donation URL copied to clipboard!');
             });
             document.getElementById('launch-btn').addEventListener('click', function() {
-                const launchUrl = `${currentUrl}/donate/${alertId}`;
+                const launchUrl = `${currentUrl}/donate/${donate_id}`;
                 window.open(launchUrl, '_blank');
             });
+</script>
+<script>
+// Get the current URL and extract the base URL (protocol + domain + port) // This gives you the base URL like 'http://127.0.0.1:8000'
+
+// Construct the full Live Donators URL by appending the alert path
+const donate_id_latest = "{{ alert_details.alert_id }}";
+console.log(donate_id_latest)  // Ensure this variable is available from the backend
+const latestDonationUrl = `${currentUrl}/latest/${donate_id_latest}`;
+
+// Set the Live Donators URL in the input field
+document.getElementById('latest_donation').value = latestDonationUrl;
+
+document.getElementById('copy-btn1').addEventListener('click', function() {
+    const latestDonationInput = document.getElementById('latest_donation');
+    latestDonationInput.select();
+    document.execCommand('copy');
+    alert('Latest Donation URL copied to clipboard!');
+});
+
+document.getElementById('launch-btn1').addEventListener('click', function() {
+    const launchUrl = latestDonationUrl;  // Use the correct latest donation URL
+    window.open(launchUrl, '_blank');
+});
+
 </script>
 
         

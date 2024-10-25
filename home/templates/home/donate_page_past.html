@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {{donation_page_details.username}} || Donate Page</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f4f4f9;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: blue;
+            text-decoration none;
+        }
+
+        .donation-form {
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .profile-pic-placeholder {
+            width: 100px;
+            height: 100px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            display: block;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .top-donors {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .popup button {
+            margin-top: 10px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #218838;
+        }
+        .profile-pic-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            padding: 5px;
+            background-color: #f0f0f0;
+            margin-bottom: 10px;
+        }
+        
+        .donation-recipient-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333;
+        }
+        
+        .donation-recipient-message {
+            font-size: 1rem;
+            font-style: italic;  /* Optional: makes the message italic */
+            color: #666;         /* Customize the text color */
+            margin-top: 5px;
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar with Logo -->
+    <nav class="navbar navbar-light bg-light">
+        <a class="logo-text" href="/">Kamaucha Nepali</a> <!-- Home link -->
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Donation Form -->
+            <div class="col-lg-7 col-md-8 col-sm-12">
+                <div class="donation-form">
+                    <h2 class="text-center mb-4">Make a Donation</h2>
+                    <div class="text-center">
+                        <img id="profile-pic" src="{{donation_page_details.profile_picture.url}}" alt="Profile Picture" class="profile-pic-img">
+                        <h2 class="donation-recipient-name">{{donation_page_details.username}}</h2>
+                        <p class="donation-recipient-message">{{donation_page_details.page_message}}</p>
+                    </div>
+                    
+                    <form id="donation-form"  method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" name="donator_name" id="donator_name" placeholder="Enter your username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email (optional)</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" class="form-control" id="amount" name="donation_amount" placeholder="Enter amount" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea class="form-control" name="donation_message" id="donation_message" rows="3" placeholder="Enter your message"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-custom btn-block" id="pay-button">Donate Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Top Donors List -->
+            <div class="col-lg-5 col-md-4 col-sm-12">
+                <div class="top-donors mt-4">
+                    <h3>Top 3 Donors</h3>
+                    <ul class="list-group">
+                        {% if donators %}
+                            {% for donator in donators|slice:":3" %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        {% if forloop.first %}
+                                            <span style="font-weight: bold; color: gold;">👑 {{ donator.donator_name }}</span>
+                                        {% elif forloop.counter == 2 %}
+                                            <span style="font-weight: bold; color: silver;">🥈 {{ donator.donator_name }}</span>
+                                        {% elif forloop.counter == 3 %}
+                                            <span style="font-weight: bold; color: #cd7f32;">🥉 {{ donator.donator_name }}</span>
+                                        {% endif %}
+                                    </span>
+                                    <span class="badge bg-primary rounded-pill">NPR {{ donator.donation_amount }}</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No donors yet. Be the first one to donate to {{ donation_page_details.username }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            
+
+                <!-- Other Donors List -->
+                <div class="all-donators mt-4">
+                    <h3>Other Donors</h3>
+                    <ul class="list-group">
+                        {% if donators|length > 3 %}
+                            {% for donator in donators|slice:"3:" %}
+                                {% if donator.donation_status == "Completed" %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>{{ forloop.counter|add:3 }}. {{ donator.donator_name }}</span>
+                                        <span class="badge bg-primary rounded-pill">NPR {{ donator.donation_amount }}</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No additional donors beyond the top 3.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+            
+
+    <!-- Payment Options Popup -->
+    <div class="overlay" id="payment-overlay"></div>
+    <div class="popup" id="payment-popup">
+        <h4>Select Payment Method</h4>
+        <button class="btn btn-primary btn-block" id="esewa-button">Esewa</button>
+        <button class="btn btn-info btn-block" id="khalti-button">Khalti</button>
+        <button class="btn btn-danger btn-block" id="cancel-button">Cancel</button>
+    </div>
+
+    <!-- Bootstrap and jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // WebSocket connection
+        const ws = new WebSocket(`ws://${window.location.host}/ws/alert/{{alert_detail.alert_id}}/`);
+
+        // Open payment options popup
+        document.getElementById("pay-button").addEventListener("click", () => {
+            document.getElementById("payment-popup").style.display = "block";
+            document.getElementById("payment-overlay").style.display = "block";
+        });
+
+        // Handle payment options
+        document.getElementById("esewa-button").addEventListener("click", () => {
+            // Set a hidden input to indicate the payment method
+            const form = document.getElementById('donation-form');
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = 'method';
+            methodInput.value = 'esewa';
+            form.appendChild(methodInput);
+            form.submit(); // Submit the form
+        });
+
+        document.getElementById("khalti-button").addEventListener("click", () => {
+            const form = document.getElementById('donation-form');
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = 'method';
+            methodInput.value = 'khalti';
+            form.appendChild(methodInput);
+            form.submit(); // Submit the form
+        });
+
+        document.getElementById("cancel-button").addEventListener("click", closePopup);
+
+        // Close popup
+        function closePopup() {
+            document.getElementById("payment-popup").style.display = "none";
+            document.getElementById("payment-overlay").style.display = "none";
+        }  document.getElementById("payment-overlay").style.display = "none";
+        
+    </script>
+
+</body>
+
+</html>

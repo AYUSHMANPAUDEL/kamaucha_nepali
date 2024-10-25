@@ -115,8 +115,12 @@ def handle_completed_payout(sender, instance, **kwargs):
 class Alert(models.Model):
     username = models.ForeignKey(User, on_delete=models.CASCADE)
     alert_id = models.CharField(max_length=8, unique=True, blank=True)
-    alert_image = models.ImageField(upload_to='alerts/',default="alerts/default_donation.gif")
-    alert_sound = models.FileField(upload_to='mp3s/', default="mp3s/default_alert_sound.mp3")
+    alert_image_level_1 = models.ImageField(upload_to='alerts/',default="alerts/default_donation.gif")
+    alert_image_level_2 = models.ImageField(upload_to='alerts/',default="alerts/default_donation.gif")
+    alert_image_level_3 = models.ImageField(upload_to='alerts/',default="alerts/default_donation.gif")
+    alert_sound_1= models.FileField(upload_to='mp3s/', default="mp3s/default_alert_sound.mp3")
+    alert_sound_2 = models.FileField(upload_to='mp3s/', default="mp3s/default_alert_sound.mp3")
+    alert_sound_3 = models.FileField(upload_to='mp3s/', default="mp3s/default_alert_sound.mp3")
     def __str__(self):
         return f"{self.username}"
     def save(self, *args, **kwargs):

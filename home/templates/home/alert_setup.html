@@ -278,14 +278,14 @@
                     <div class="mb-3">
                         <label for="alert_image" class="form-label">Alert Image</label>
                         <input type="file" class="form-control" id="alert_image" name="alert_image" accept="image/*" onchange="previewImage(event)">
-                        <img id="image_preview" src="{{ current_alert.alert_image.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
+                        <img id="image_preview" src="{{ current_alert.alert_image_level_1.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
 
                     </div>
                     <div class="mb-3">
                         <label for="alert_sound" class="form-label">Alert Sound</label>
                         <input type="file" class="form-control" id="alert_sound" name="alert_sound" accept="audio/*" onchange="previewSound(event)">
                         <audio id="sound_preview" controls style="display: block; margin-top: 10px;">
-                            <source src="{{ current_alert.alert_sound.url }}" type="audio/mpeg">
+                            <source src="{{ current_alert.alert_sound_1.url }}" type="audio/mpeg">
                             Your browser does not support the audio element.
                         </audio>
                     </div>

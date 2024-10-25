@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Donations || {{alert_detail.username}}</title>
+    <style>
+        /* Ensures background transparency */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.0);
+            color: white;
+        }
+
+        /* Donation container styling */
+        #donations {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            line-height: 1.2;
+        }
+
+        /* Styling each donation entry */
+        .donation {
+            margin: 10px 0;
+            padding: 8px 12px;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="donations">
+        <div class="donation">Be the first one to donate in this stream</div>
+    </div>
+    
+
+    <script>
+        const donationsContainer = document.getElementById("donations");
+        const userId = "{{ alert_detail.alert_id }}"; // Get the user ID from the context
+        let latestDonations = []; // Array to hold the latest donations
+    
+        // WebSocket connection to receive live donations
+        const ws = new WebSocket(`ws://${window.location.host}/ws/alert/${userId}/`);
+    
+        ws.onmessage = function(event) {
+            const donationData = JSON.parse(event.data);
+            updateDonations(donationData);
+        };
+    
+        function updateDonations(donation) {
+            // Add the new donation to the beginning of the array
+            latestDonations.unshift(donation);
+    
+            // Limit the array to the latest 3 donations
+            if (latestDonations.length > 3) {
+                latestDonations.pop(); // Remove the oldest donation
+            }
+    
+            // Clear the container and display the latest donations
+            donationsContainer.innerHTML = ''; // Clear previous donations
+            latestDonations.forEach(donation => {
+                const donationElement = document.createElement("div");
+                donationElement.className = "donation";
+                donationElement.textContent = `${donation.donator_name}: NRP.${donation.donation_amount}`;
+                donationsContainer.appendChild(donationElement);
+            });
+        }
+    </script>
+    
+</body>
+</html>

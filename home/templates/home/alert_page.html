@@ -65,73 +65,78 @@
 </head>
 <body>
 
-<div id="alert-container" class="alert-container" style="display: none;">
-    <img id="alert-image" class="alert-image" src="{{ alert_detail.alert_image.url }}" alt="Alert Image">
-    <div class="donation-info">
-        <h2 id="donator-name" class="donator-name"></h2>
-        <p id="donation-amount" class="donation-amount"></p>
-        <p id="donation-message" class="donation-message"></p>
+    <div id="alert-container" class="alert-container" style="display: none;">
+        <img id="alert-image" class="alert-image" src="{{ alert_detail.alert_image_level_1.url }}" alt="Alert Image">
+        <div class="donation-info">
+            <h2 id="donator-name" class="donator-name"></h2>
+            <p id="donation-amount" class="donation-amount"></p>
+            <p id="donation-message" class="donation-message"></p>
+        </div>
     </div>
-</div>
-
-<audio id="alert-sound" src="{{ alert_detail.alert_sound_1.url }}" preload="auto"></audio>
-
-<script>
-    const alertContainer = document.getElementById('alert-container');
-    const donatorName = document.getElementById('donator-name');
-    const donationAmount = document.getElementById('donation-amount');
-    const donationMessage = document.getElementById('donation-message');
-    const alertSound = document.getElementById('alert-sound');
-
-    const alertQueue = [];  // Queue for incoming alerts
-    let isPlaying = false;  // Flag to check if sound is currently playing
-
-    const pathParts = window.location.pathname.split('/');
-    const userId = pathParts[pathParts.length - 1];
-    console.log(userId);
-    const ws = new WebSocket(`ws://${window.location.host}/ws/alert/${userId}/`);
     
-    ws.onopen = function () {
-        console.log("WebSocket connection opened");
-    };
-
-    ws.onmessage = function(event) {
-        console.log("Got the data!");
-        const data = JSON.parse(event.data);
-        console.log(data);
-        alertQueue.push(data);  // Add the new donation data to the queue
-        processQueue();         // Process the queue
-    };
-
-    function processQueue() {
-        if (isPlaying || alertQueue.length === 0) {
-            return;  // If already playing or queue is empty, return
-        }
+    <audio id="alert-sound" preload="auto"></audio>
     
-        const data = alertQueue.shift();  // Get the next alert data
-        console.log("Processing alert:", data); // Debugging log
-        donatorName.textContent = `${data.donator_name} just tipped Rs. ${data.donation_amount}`; // Updated message format
-        donationMessage.textContent = data.donation_message; // Retain the original donation message if needed
+    <script>
+        const alertContainer = document.getElementById('alert-container');
+        const donatorName = document.getElementById('donator-name');
+        const donationAmount = document.getElementById('donation-amount');
+        const donationMessage = document.getElementById('donation-message');
+        const alertSound = document.getElementById('alert-sound');
+        const alertImage = document.getElementById('alert-image');
     
-        // Show the alert container
-        alertContainer.style.display = 'block';
+        const alertQueue = [];
+        let isPlaying = false;
     
-        // Play the sound
-        alertSound.currentTime = 0; // Reset sound to start
-        isPlaying = true;  // Set the flag to true
+        const pathParts = window.location.pathname.split('/');
+        const userId = pathParts[pathParts.length - 1];
+        const ws = new WebSocket(`ws://${window.location.host}/ws/alert/${userId}/`);
     
-        alertSound.play().catch(err => {
-            console.error("Audio play failed:", err);
-        });
-    
-        // Add an event listener for when the sound finishes playing
-        alertSound.onended = function() {
-            alertContainer.style.display = 'none';  // Hide the alert after the sound has finished
-            isPlaying = false;  // Reset the flag
-            processQueue();  // Process the next alert in the queue
+        ws.onopen = function () {
+            console.log("WebSocket connection opened");
         };
-    }
-</script>
-
-</body>
-</html>
+    
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            alertQueue.push(data);
+            processQueue();
+        };
+    
+        function processQueue() {
+            if (isPlaying || alertQueue.length === 0) {
+                return;
+            }
+    
+            const data = alertQueue.shift();
+            donatorName.textContent = `${data.donator_name} just tipped Rs. ${data.donation_amount}`;
+            donationMessage.textContent = data.donation_message;
+    
+            // Set the alert image and sound source based on donation amount
+            if (data.donation_amount >= 10 && data.donation_amount <= 100) {
+                alertImage.src = "{{ alert_detail.alert_image_level_1.url }}";
+                alertSound.src = "{{ alert_detail.alert_sound_1.url }}";
+            } else if (data.donation_amount > 100 && data.donation_amount <= 500) {
+                alertImage.src = "{{ alert_detail.alert_image_level_2.url }}";
+                alertSound.src = "{{ alert_detail.alert_sound_2.url }}";
+            } else if (data.donation_amount > 500) {
+                alertImage.src = "{{ alert_detail.alert_image_level_3.url }}";
+                alertSound.src = "{{ alert_detail.alert_sound_3.url }}";
+            }
+    
+            alertContainer.style.display = 'block';
+            alertSound.currentTime = 0;
+            isPlaying = true;
+    
+            alertSound.play().catch(err => {
+                console.error("Audio play failed:", err);
+            });
+    
+            alertSound.onended = function() {
+                alertContainer.style.display = 'none';
+                isPlaying = false;
+                processQueue();
+            };
+        }
+    </script>
+    
+    </body>
+    </html>

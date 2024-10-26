@@ -269,64 +269,79 @@
         </div>
         
         
-        <div class="content flex-grow-1">
-            <div class="main-content">
-                <h1 class="greeting">Alert Setup</h1>
-                
-                <form method="POST" enctype="multipart/form-data">
+        <div class="content flex-grow-1" style="padding: 30px; font-family: 'Segoe UI', Tahoma, sans-serif;">
+            <div class="main-content" style="max-width: 90%; margin: 0 auto;">
+                <h1 class="greeting" style="color: #00d4ff; font-size: 36px; font-weight: bold; margin-bottom: 20px; text-align: center; text-shadow: 0 4px 10px rgba(0, 212, 255, 0.7);">Alert Setup</h1>
+        
+                <form method="POST" enctype="multipart/form-data" style="background: linear-gradient(145deg, #0f2027, #203a43, #2c5364); padding: 30px; border-radius: 12px; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.4); transition: all 0.3s ease;">
                     {% csrf_token %}
-                    <div class="image-container" style="display: flex; gap: 20px;">
-                        <div class="mb-3">
-                          <label for="alert_image_1" class="form-label">Alert Image 1</label>
-                          <input type="file" class="form-control" id="alert_image_1" name="alert_image_1" accept="image/*" onchange="previewImage(event, 'image_preview_1')">
-                          <img id="image_preview_1" src="{{ current_alert.alert_image_level_1.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
-                        </div>
-                        <div class="mb-3">
-                          <label for="alert_image_2" class="form-label">Alert Image 2</label>
-                          <input type="file" class="form-control" id="alert_image_2" name="alert_image_2" accept="image/*" onchange="previewImage(event, 'image_preview_2')">
-                          <img id="image_preview_2" src="{{ current_alert.alert_image_level_2.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
-                        </div>
-                        <div class="mb-3">
-                          <label for="alert_image_3" class="form-label">Alert Image 3</label>
-                          <input type="file" class="form-control" id="alert_image_3" name="alert_image_3" accept="image/*" onchange="previewImage(event, 'image_preview_3')">
-                          <img id="image_preview_3" src="{{ current_alert.alert_image_level_3.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
-                        </div>
-                      </div>
-                    
-                    </div>
-                    <div class="alert-sounds-container" style="display: flex; gap: 20px;">
-                        <div class="mb-3">
-                            <label for="alert_sound_1" class="form-label">Alert Sound 1</label>
-                            <input type="file" class="form-control" id="alert_sound_1" name="alert_sound_1" accept="audio/*" onchange="previewSound(event, 'sound_preview_1')">
-                            <audio id="sound_preview_1" controls style="display: block; margin-top: 10px;">
-                                <source src="{{ current_alert.alert_sound_1.url }}" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                        </div>
-                    
-                        <div class="mb-3">
-                            <label for="alert_sound_2" class="form-label">Alert Sound 2</label>
-                            <input type="file" class="form-control" id="alert_sound_2" name="alert_sound_2" accept="audio/*" onchange="previewSound(event, 'sound_preview_2')">
-                            <audio id="sound_preview_2" controls style="display: block; margin-top: 10px;">
-                                <source src="{{ current_alert.alert_sound_2.url }}" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                        </div>
-                    
-                        <div class="mb-3">
-                            <label for="alert_sound_3" class="form-label">Alert Sound 3</label>
-                            <input type="file" class="form-control" id="alert_sound_3" name="alert_sound_3" accept="audio/*" onchange="previewSound(event, 'sound_preview_3')">
-                            <audio id="sound_preview_3" controls style="display: block; margin-top: 10px;">
-                                <source src="{{ current_alert.alert_sound_3.url }}" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
+        
+                    <!-- Alert Images Section -->
+                    <div class="section" style="margin-bottom: 40px;">
+                        <h2 style="font-size: 24px; color: #33d9b2; font-weight: bold; border-bottom: 2px solid #33d9b2; padding-bottom: 8px; margin-bottom: 20px; text-shadow: 0 2px 5px rgba(51, 217, 178, 0.5);">Alert Images</h2>
+                        <div class="image-container" style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: space-evenly;">
+                            <div class="mb-3" style="flex: 1; max-width: 220px; text-align: center; padding: 20px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; transition: all 0.3s ease;">
+                                <label for="alert_image_1" class="form-label" style="font-weight: bold; color: #fff;">Level 1 (Rs10-Rs100)</label>
+                                <input type="file" class="form-control" id="alert_image_1" name="alert_image_1" accept="image/*" onchange="previewImage(event, 'image_preview_1')" style="margin-top: 10px;">
+                                <img id="image_preview_1" src="{{ current_alert.alert_image_level_1.url }}" alt="Image Preview" style="display: block; margin-top: 15px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); max-width: 100%; max-height: 160px;">
+                            </div>
+        
+                            <div class="mb-3" style="flex: 1; max-width: 220px; text-align: center; padding: 20px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; transition: all 0.3s ease;">
+                                <label for="alert_image_2" class="form-label" style="font-weight: bold; color: #fff;">Level 2 (Rs200-Rs500)</label>
+                                <input type="file" class="form-control" id="alert_image_2" name="alert_image_2" accept="image/*" onchange="previewImage(event, 'image_preview_2')" style="margin-top: 10px;">
+                                <img id="image_preview_2" src="{{ current_alert.alert_image_level_2.url }}" alt="Image Preview" style="display: block; margin-top: 15px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); max-width: 100%; max-height: 160px;">
+                            </div>
+        
+                            <div class="mb-3" style="flex: 1; max-width: 220px; text-align: center; padding: 20px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; transition: all 0.3s ease;">
+                                <label for="alert_image_3" class="form-label" style="font-weight: bold; color: #fff;">Level 3 (Rs500+)</label>
+                                <input type="file" class="form-control" id="alert_image_3" name="alert_image_3" accept="image/*" onchange="previewImage(event, 'image_preview_3')" style="margin-top: 10px;">
+                                <img id="image_preview_3" src="{{ current_alert.alert_image_level_3.url }}" alt="Image Preview" style="display: block; margin-top: 15px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); max-width: 100%; max-height: 160px;">
+                            </div>
                         </div>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary">Save Settings</button>
+        
+                    <!-- Alert Sounds Section -->
+                    <div class="section" style="margin-bottom: 40px;">
+                        <h2 style="font-size: 24px; color: #ff6b81; font-weight: bold; border-bottom: 2px solid #ff6b81; padding-bottom: 8px; margin-bottom: 20px; text-shadow: 0 2px 5px rgba(255, 107, 129, 0.5);">Alert Sounds</h2>
+                        <div class="alert-sounds-container" style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: space-evenly;">
+                            <div class="mb-3" style="flex: 1; max-width: 220px; text-align: center; padding: 20px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; transition: all 0.3s ease;">
+                                <label for="alert_sound_1" class="form-label" style="font-weight: bold; color: #fff;">Level 1 Sound</label>
+                                <input type="file" class="form-control" id="alert_sound_1" name="alert_sound_1" accept="audio/*" onchange="previewSound(event, 'sound_preview_1')" style="margin-top: 10px;">
+                                <audio id="sound_preview_1" controls style="display: block; margin-top: 15px;">
+                                    <source src="{{ current_alert.alert_sound_1.url }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+        
+                            <div class="mb-3" style="flex: 1; max-width: 220px; text-align: center; padding: 20px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; transition: all 0.3s ease;">
+                                <label for="alert_sound_2" class="form-label" style="font-weight: bold; color: #fff;">Level 2 Sound</label>
+                                <input type="file" class="form-control" id="alert_sound_2" name="alert_sound_2" accept="audio/*" onchange="previewSound(event, 'sound_preview_2')" style="margin-top: 10px;">
+                                <audio id="sound_preview_2" controls style="display: block; margin-top: 15px;">
+                                    <source src="{{current_alert.alert_sound_2.url }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+        
+                            <div class="mb-3" style="flex: 1; max-width: 220px; text-align: center; padding: 20px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; transition: all 0.3s ease;">
+                                <label for="alert_sound_3" class="form-label" style="font-weight: bold; color: #fff;">Level 3 Sound</label>
+                                <input type="file" class="form-control" id="alert_sound_3" name="alert_sound_3" accept="audio/*" onchange="previewSound(event, 'sound_preview_3')" style="margin-top: 10px;">
+                                <audio id="sound_preview_3" controls style="display: block; margin-top: 15px;">
+                                    <source src="{{ current_alert.alert_sound_3.url }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary" style="display: block; width: 100%; font-size: 20px; font-weight: bold; color: #fff; background: linear-gradient(145deg, #00d4ff, #ff6b81); border: none; border-radius: 8px; padding: 12px; transition: background 0.3s ease;">
+                        Save Settings
+                    </button>
                 </form>
             </div>
         </div>
+        
+        
         <script>
     // Function to preview the selected image and update its src attribute
     function previewImage(event, imageId = 'image_preview') {

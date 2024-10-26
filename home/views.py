@@ -129,6 +129,14 @@ def alert_setup_page(request):
                 current_alert.alert_image_level_2 = request.FILES['alert_image_2']
             if 'alert_image_3' in request.FILES:
                 current_alert.alert_image_level_3 = request.FILES['alert_image_3']
+            if 'alert_sound_1' in request.FILES:
+                 current_alert.alert_sound_1 = request.FILES['alert_sound_1']
+            if 'alert_sound_2' in request.FILES:
+                 current_alert.alert_sound_2 = request.FILES['alert_sound_2']
+            if 'alert_sound_3' in request.FILES:
+                 current_alert.alert_sound_3 = request.FILES['alert_sound_3']
+
+
             
             current_alert.save()  # Save the instance with the new images
        
@@ -188,6 +196,10 @@ def donate_page(request, username):
     if User.objects.filter(username=username).exists():
         if request.method == "POST":
             method = request.POST.get("method")
+            amount = int(request.POST.get("donation_amount"))
+            if (amount <= 10):
+                messages.error(request,"Donation amount must be greater than Rs.10")
+                return redirect("donate_page",username=username)
             if method == "esewa":
                 donator_name = request.POST.get("donator_name")
                 donation_amount = int(request.POST.get('donation_amount'))

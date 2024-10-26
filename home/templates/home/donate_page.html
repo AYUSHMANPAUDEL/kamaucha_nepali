@@ -209,6 +209,68 @@
             border-color: #3b97e0; /* Optional: Highlight the border with a color on focus */
             outline: none; /* Removes the default blue outline */
         }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0; /* Remove margins for centering */
+            position: fixed; /* Use fixed positioning for center display */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Offset by half the width and height */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+        
+        .message-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            animation: fadeIn 0.5s ease, fadeOut 0.5s ease forwards 2.5s; /* Add fadeOut animation */
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .message-item.success {
+            background: linear-gradient(135deg, #00b09b, #96c93d); /* Green for success */
+        }
+        
+        .message-item.error {
+            background: linear-gradient(135deg, #f85032, #e73827); /* Red for error */
+        }
+        
+        .message-item.info {
+            background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Blue for info */
+        }
+        
+        .message-item.warning {
+            background: linear-gradient(135deg, #ffb74d, #f57c00); /* Orange for warning */
+        }
+        
+        .message-item:before {
+            content: "";
+            width: 8px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 8px 0 0 8px;
+            background-color: rgba(255, 255, 255, 0.3); /* Decorative side bar */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
      
     </style>
 </head>
@@ -219,6 +281,10 @@
     <nav class="navbar">
         <a class="logo-text" href="/">Kamaucha Nepali</a> <!-- Home link -->
     </nav>
+
+    <ul class="messages">
+    </ul>
+<!-- Your existing form and other HTML content -->
 
     <div class="container mt-5">
         <div class="row">
@@ -266,7 +332,7 @@
                 <div class="top-donors mt-4">
                     <h3>Top 3 Donors</h3>
                     <div class="donor-container">
-                        {% if donators %}
+                        {% if donators %}   
                             {% for donator in donators|slice:":3" %}
                                 <div class="donor-position">
                                     {% if forloop.counter == 1 %}
@@ -374,6 +440,32 @@
         } document.getElementById("payment-overlay").style.display = "none";
 
     </script>
+    <script>
+        function showMessage(type, message) {
+            const messageItem = document.createElement('div');
+            messageItem.classList.add('message-item', type);
+            messageItem.textContent = message;
+    
+            // Append to messages container
+            document.querySelector('.messages').appendChild(messageItem);
+    
+            // Remove after 5 seconds
+            setTimeout(() => {
+                messageItem.remove();
+            }, 5000);
+        }
+    
+        // Show messages if present
+        const messages = [
+            {% for message in messages %}
+                { "type": "{{ message.tags }}", "text": "{{ message }}" },
+            {% endfor %}
+        ];
+    
+        messages.forEach(msg => showMessage(msg.type, msg.text));
+    </script>
+    
+        
 </body>
 
 </html>

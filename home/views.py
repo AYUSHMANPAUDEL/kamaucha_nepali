@@ -123,22 +123,21 @@ def alert_setup_page(request):
         current_alert = Alert.objects.get(username=request.user)
 
         if request.method == 'POST':
-            # Get alert image and sound from the request
-            alert_image = request.FILES.get('alert_image')
-            alert_sound = request.FILES.get('alert_sound')
-
-            # Update the current alert if files are provided
-            if alert_image:
-                current_alert.alert_image = alert_image
-            if alert_sound:
-                current_alert.alert_sound = alert_sound
-
-            current_alert.save()
+            if 'alert_image_1' in request.FILES:
+                current_alert.alert_image_level_1 = request.FILES['alert_image_1']
+            if 'alert_image_2' in request.FILES:
+                current_alert.alert_image_level_2 = request.FILES['alert_image_2']
+            if 'alert_image_3' in request.FILES:
+                current_alert.alert_image_level_3 = request.FILES['alert_image_3']
+            
+            current_alert.save()  # Save the instance with the new images
+       
             return redirect('alert_setup_page')  # Redirect to the same page after saving
 
         return render(request, "home/alert_setup.html", {"current_alert": current_alert})
 
     return redirect('login_page')
+
 def payout_request_page(request):
     if request.user.is_authenticated:
         if request.method == "POST":

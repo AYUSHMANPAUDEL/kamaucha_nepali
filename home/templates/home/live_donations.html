@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Donations | {{alert_detail.username}}</title>
+    <style>
+        /* Ensures background transparency */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.0);
+            color: white;
+        }
+
+        /* Main container styling */
+        #main-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Popout icon styling */
+        #popout-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 5px 8px;
+            border-radius: 50%;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        #popout-icon:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Donations container styling */
+        #donations {
+            width: 100%;
+            text-align: center;
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
+
+        /* Styling for each donation entry */
+        .donation {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent */
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        /* Donation name and amount styling */
+        .donation-header {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        /* Donation message styling */
+        .donation-message {
+            font-size: 1em;
+            color: #cfcfcf;
+            margin-top: 4px;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-container">
+        <!-- Popout Icon -->
+        <div id="popout-icon" title="Pop out">&#x2197;</div>
+
+        <!-- Donations Display -->
+        <div id="donations">
+            <div class="donation">
+                <div class="donation-header">No donations yet in this stream</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const donationsContainer = document.getElementById("donations");
+        const userId = "{{ alert_detail.alert_id }}"; // Get the user ID from the context
+        let latestDonations = []; // Array to hold the latest donations
+
+        // WebSocket connection to receive live donations
+        const ws = new WebSocket(`ws://${window.location.host}/ws/alert/${userId}/`);
+
+        ws.onmessage = function(event) {
+            const donationData = JSON.parse(event.data);
+            updateDonations(donationData);
+        };
+
+        function updateDonations(donation) {
+            // Add the new donation to the beginning of the array
+            latestDonations.unshift(donation);
+
+            // Limit the array to the latest 5 donations
+            if (latestDonations.length > 5) {
+                latestDonations.pop(); // Remove the oldest donation
+            }
+
+            // Clear the container and display the latest donations
+            donationsContainer.innerHTML = ''; // Clear previous donations
+            latestDonations.forEach(donation => {
+                const donationElement = document.createElement("div");
+                donationElement.className = "donation";
+
+                // Donation header with donator name and amount
+                const donationHeader = document.createElement("div");
+                donationHeader.className = "donation-header";
+                donationHeader.textContent = `${donation.donator_name}: NRP.${donation.donation_amount}`;
+
+                // Donation message
+                const donationMessage = document.createElement("div");
+                donationMessage.className = "donation-message";
+                donationMessage.textContent = donation.donation_message;
+
+                // Append elements
+                donationElement.appendChild(donationHeader);
+                donationElement.appendChild(donationMessage);
+                donationsContainer.appendChild(donationElement);
+            });
+        }
+
+        // Pop-out functionality
+        document.getElementById("popout-icon").onclick = function() {
+            window.open(window.location.href, "_blank", "width=300,height=500");
+        };
+    </script>
+</body>
+</html>

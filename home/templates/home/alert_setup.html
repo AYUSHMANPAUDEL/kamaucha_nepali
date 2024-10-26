@@ -258,7 +258,7 @@
             </div>
         </nav>
         <div class="tip-url-section mt-5">
-            <label for="tip-url">Alert URL</label>
+            <label for="tip-url">Tip URL</label>
             <div class="tip-url-container d-flex">
                 <input type="text" id="tip-url" class="form-control" readonly>
                 <button id="copy-btn" class="btn btn-primary">Copy</button>
@@ -275,49 +275,88 @@
                 
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
-                            <label for="alert_image" class="form-label">Alert Image</label>
-                            <input type="file" class="form-control" id="alert_image" name="alert_image" accept="image/*" onchange="previewImage(event)">
-                            <img id="image_preview" src="{{ current_alert.alert_image_level_1.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
-
+                    <div class="image-container" style="display: flex; gap: 20px;">
+                        <div class="mb-3">
+                          <label for="alert_image_1" class="form-label">Alert Image 1</label>
+                          <input type="file" class="form-control" id="alert_image_1" name="alert_image_1" accept="image/*" onchange="previewImage(event, 'image_preview_1')">
+                          <img id="image_preview_1" src="{{ current_alert.alert_image_level_1.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
+                        </div>
+                        <div class="mb-3">
+                          <label for="alert_image_2" class="form-label">Alert Image 2</label>
+                          <input type="file" class="form-control" id="alert_image_2" name="alert_image_2" accept="image/*" onchange="previewImage(event, 'image_preview_2')">
+                          <img id="image_preview_2" src="{{ current_alert.alert_image_level_2.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
+                        </div>
+                        <div class="mb-3">
+                          <label for="alert_image_3" class="form-label">Alert Image 3</label>
+                          <input type="file" class="form-control" id="alert_image_3" name="alert_image_3" accept="image/*" onchange="previewImage(event, 'image_preview_3')">
+                          <img id="image_preview_3" src="{{ current_alert.alert_image_level_3.url }}" alt="Image Preview" style="display: block; margin-top: 10px; max-width: 200px; max-height: 200px; height: auto; width: auto;">
+                        </div>
+                      </div>
+                    
                     </div>
-                    <div class="mb-3">
-                        <label for="alert_sound" class="form-label">Alert Sound</label>
-                        <input type="file" class="form-control" id="alert_sound" name="alert_sound" accept="audio/*" onchange="previewSound(event)">
-                        <audio id="sound_preview" controls style="display: block; margin-top: 10px;">
-                            <source src="{{ current_alert.alert_sound_1.url }}" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                        </audio>
+                    <div class="alert-sounds-container" style="display: flex; gap: 20px;">
+                        <div class="mb-3">
+                            <label for="alert_sound_1" class="form-label">Alert Sound 1</label>
+                            <input type="file" class="form-control" id="alert_sound_1" name="alert_sound_1" accept="audio/*" onchange="previewSound(event, 'sound_preview_1')">
+                            <audio id="sound_preview_1" controls style="display: block; margin-top: 10px;">
+                                <source src="{{ current_alert.alert_sound_1.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="alert_sound_2" class="form-label">Alert Sound 2</label>
+                            <input type="file" class="form-control" id="alert_sound_2" name="alert_sound_2" accept="audio/*" onchange="previewSound(event, 'sound_preview_2')">
+                            <audio id="sound_preview_2" controls style="display: block; margin-top: 10px;">
+                                <source src="{{ current_alert.alert_sound_2.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="alert_sound_3" class="form-label">Alert Sound 3</label>
+                            <input type="file" class="form-control" id="alert_sound_3" name="alert_sound_3" accept="audio/*" onchange="previewSound(event, 'sound_preview_3')">
+                            <audio id="sound_preview_3" controls style="display: block; margin-top: 10px;">
+                                <source src="{{ current_alert.alert_sound_3.url }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
                     </div>
+                    
                     <button type="submit" class="btn btn-primary">Save Settings</button>
                 </form>
             </div>
         </div>
         <script>
-            function previewImage(event) {
-                const imagePreview = document.getElementById('image_preview');
-                const file = event.target.files[0];
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    imagePreview.src = e.target.result;
-                }
-                
-                if (file) {
-                    reader.readAsDataURL(file);
-                } else {
-                    imagePreview.src = '';
-                }
-            }
+    // Function to preview the selected image and update its src attribute
+    function previewImage(event, imageId = 'image_preview') {
+        const imagePreview = document.getElementById(imageId);
+        const file = event.target.files[0];
+        const reader = new FileReader();
         
-            function previewSound(event) {
-                const soundPreview = document.getElementById('sound_preview');
-                const file = event.target.files[0];
-                const url = URL.createObjectURL(file);
-                
-                soundPreview.src = url;
-                soundPreview.style.display = 'block'; // Show audio controls
-            }
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+        }
+        
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.src = ''; // Clear the image source if no file is selected
+        }
+    }
+
+        
+
+    function previewSound(event, soundId = 'sound_preview') {
+        const soundPreview = document.getElementById(soundId);
+        const file = event.target.files[0];
+        const url = URL.createObjectURL(file);
+        
+        soundPreview.src = url;
+        soundPreview.style.display = 'block'; // Show audio controls
+    }
+
+
         </script>
         <script>
             // Get the current URL and extract the base URL (protocol + domain + port)

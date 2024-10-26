@@ -315,3 +315,9 @@ def latest_donations_preview(request,alert_id):
         alert_detail = Alert.objects.get(alert_id=alert_id)
         return render(request,"home/latest_donations_page.html",{"alert_detail":alert_detail})
     return HttpResponse("404 PAGE NOT FOUND")
+
+def live_donations_preview(request,alert_id):
+    if Alert.objects.filter(alert_id=alert_id).exists():
+        alert_detail = Alert.objects.get(alert_id=alert_id)
+        return render(request,"home/live_donations.html",{"alert_detail":alert_detail})
+    return HttpResponse("404 PAGE NOT FOUND")

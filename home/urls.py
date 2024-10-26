@@ -18,4 +18,5 @@ urlpatterns = [
    path("esewa/success",views.esewa_success,name="esewa_success"),
    path("khalti/success",views.khalti_success,name="khalti_success"),
    path("latest/<str:alert_id>",views.latest_donations_preview,name="latest_donations_preview"),
+   path("live/<str:alert_id>",views.live_donations_preview,name="live_donations_preview"),
 ]

@@ -171,6 +171,17 @@
 .latest_donation-container button {
     margin-left: 10px;
 }
+.live_donation-container input {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+.live_donation-container input:hover,
+.live_donation-container input:focus {
+    filter: none;
+}
+.live_donation-container button {
+    margin-left: 10px;
+}
 
 
     </style>
@@ -267,13 +278,23 @@
             <p>Share this link with your supporters</p>
         </div>
         <div class="latest_donation-url-section mt-6">
-            <label for="latest_donation">Live Donators url</label>
+            <label for="latest_donation">Live Top Donators url</label>
             <div class="latest_donation-container d-flex">
                 <input type="text" id="latest_donation" class="form-control" readonly>
                 <button id="copy-btn1" class="btn btn-primary">Copy</button>
                 <button id="launch-btn1" class="btn btn-success">Launch</button>
             </div>
             <p>Add this link to your streaming software</p>
+        </div>
+
+        <div class="live_donation-url-section mt-6">
+            <label for="live_donation">Live Donators url</label>
+            <div class="live_donation-container d-flex">
+                <input type="text" id="live_donation" class="form-control" readonly>
+                <button id="copy-btn2" class="btn btn-primary">Copy</button>
+                <button id="launch-btn2" class="btn btn-success">Launch</button>
+            </div>
+            <p>Add this link to your streaming software. Donot share this to anyone else.</p>
         </div>
 
         <div class="container main-content">
@@ -383,6 +404,28 @@ document.getElementById('launch-btn1').addEventListener('click', function() {
 });
 
 </script>
+<script>
+    // Get the current URL and extract the base URL (protocol + domain + port) // This gives you the base URL like 'http://127.0.0.1:8000'
+    
+    // Construct the full Live Donators URL by appending the alert path
+  const live_donation_url = `${currentUrl}/live/${donate_id_latest}`;
+    
+    // Set the Live Donators URL in the input field
+    document.getElementById('live_donation').value = live_donation_url;
+    
+    document.getElementById('copy-btn2').addEventListener('click', function() {
+        const liveDonationInput = document.getElementById('live_donation');
+        liveDonationInput.select();
+        document.execCommand('copy');
+        alert('live Donation URL copied to clipboard!');
+    });
+    
+    document.getElementById('launch-btn2').addEventListener('click', function() {
+        const launchUrl = live_donation_url;  // Use the correct latest donation URL
+        window.open(launchUrl, '_blank');
+    });
+    
+    </script>
 
         
     

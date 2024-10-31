@@ -43,7 +43,6 @@ def login_page(request):
         user = authenticate(username=username , password=password)
         if user is not None:
             login(request,user)
-            print("hello world!")
             return redirect("/dashboard/")
         else:
             messages.error(request, "Invalid email or password.")
@@ -60,7 +59,6 @@ def dashboard_page(request):
      payout_requests = PayoutRequest.objects.filter(username=request.user).order_by('-appeal_date')[:5]
      annoucements = Annoucement.objects.filter().order_by('-created_at')[:5]
      support_tickets = Support.objects.filter(username=request.user).order_by('-created_at')[:3]
-     print(total_donation)
      return render(request,"home/dashboard.html",{"total_donation":total_donation ,"recent_donations": recent_donations,"payout_requests":payout_requests,"support_tickets":support_tickets,"annoucements":annoucements})
     return redirect("/login/")
 
@@ -77,7 +75,6 @@ def support_page(request):
         ticket_title = request.POST.get("title")
         discord_id = request.POST.get("discordid")
         support_message = request.POST.get("support_message")
-        print(ticket_title, discord_id, support_message)
         support_db = Support.objects.create(
             username=request.user,
             ticket_title=ticket_title,
@@ -212,7 +209,6 @@ def donate_page(request, username):
                 donation.save()
                 # Generate the data string for signature
                 signature = generate_signature(donation_amount, transaction_uuid, product_code, secret_key)
-                print(signature)    
                 # Prepare context for the redirect page
                 context = {
                 'amount': donation_amount,  # Example amount
@@ -265,7 +261,6 @@ def donate_page(request, username):
                 else:
     
                     error_message = response.content.decode('utf-8')
-                    print(f"Khalti API Error: {error_message}")
                     return HttpResponse(f"Failed to initiate Khalti payment. Error: {error_message}")
         # Fetch user data for GET request
         user = User.objects.get(username=username)
@@ -289,8 +284,6 @@ def esewa_success(request):
     total_amount = payment_data.get('total_amount')
     transaction_uuid = payment_data.get('transaction_uuid')
     product_code = payment_data.get('product_code')
-    print("the transcationuiuid is :")
-    print(transaction_uuid)
     try:
         transaction = Donation.objects.get(transaction_uuid=transaction_uuid)
         username = transaction.username
@@ -306,8 +299,6 @@ def esewa_success(request):
 
 def khalti_success(request):
     transaction_uuid = request.GET.get('purchase_order_id') 
-    print("the transcationuiuid is :")
-    print(transaction_uuid)
     try:
         transaction = Donation.objects.get(transaction_uuid=transaction_uuid)
         username = transaction.username

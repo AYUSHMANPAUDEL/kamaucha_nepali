@@ -452,6 +452,28 @@
         }
     });
 </script>
+<script>
+    // Track changes to the image inputs
+    const imageInputs = document.querySelectorAll('input[type="file"]');
+    const changedImages = {};
+
+    imageInputs.forEach(input => {
+        input.addEventListener('change', () => {
+            changedImages[input.name] = true;
+        });
+    });
+
+    // Handle form submission
+    document.querySelector('form').addEventListener('submit', function (event) {
+        // Loop through the image inputs and remove unchanged fields
+        imageInputs.forEach(input => {
+            if (!changedImages[input.name]) {
+                input.remove();  // Remove the input if it wasn't changed
+            }
+        });
+    });
+</script>
+
 
 </body>
 </html>

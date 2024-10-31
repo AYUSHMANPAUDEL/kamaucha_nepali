@@ -125,7 +125,7 @@ def alert_setup_page(request):
         if request.method == 'POST':
             if 'alert_image_1' in request.FILES:
                 current_alert.alert_image_level_1 = request.FILES['alert_image_1']
-            if 'alert_image_2' in request.FILES:
+            if 'alert_image_2' in request.FILES:    
                 current_alert.alert_image_level_2 = request.FILES['alert_image_2']
             if 'alert_image_3' in request.FILES:
                 current_alert.alert_image_level_3 = request.FILES['alert_image_3']
@@ -249,7 +249,7 @@ def donate_page(request, username):
                     'Authorization': f'key {settings.KHALTI_SECRET_KEY}',
                     'Content-Type': 'application/json',
                 }
-
+    
                 response = requests.request("POST", url, headers=headers, data=payload)
 
                 if response.status_code == 200:
@@ -263,7 +263,7 @@ def donate_page(request, username):
 
                             return render(request, "home/khalti_redirect.html", context)
                 else:
-                            # Handle error
+    
                     error_message = response.content.decode('utf-8')
                     print(f"Khalti API Error: {error_message}")
                     return HttpResponse(f"Failed to initiate Khalti payment. Error: {error_message}")

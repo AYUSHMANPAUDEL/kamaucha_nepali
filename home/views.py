@@ -14,6 +14,8 @@ from django.conf import settings
 import requests
 # Create your views here.
 def home_page(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard_page")
     return render(request,"home/index.html")
 
 def register_page(request):

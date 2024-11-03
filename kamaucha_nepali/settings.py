@@ -137,5 +137,5 @@ import os
 MEDIA_URL = '/media/'  # The URL endpoint for accessing media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') 
 # settings.py
-KHALTI_PUBLIC_KEY = ''
-KHALTI_SECRET_KEY = ''
+KHALTI_PUBLIC_KEY = '6083b5a780d14a76b0e72d1b0a663ce7'
+KHALTI_SECRET_KEY = '9a20aca9e65840ddb22820d516561fa4'

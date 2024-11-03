@@ -270,12 +270,20 @@
             from { opacity: 1; }
             to { opacity: 0; }
         }
-        
+
      
     </style>
 </head>
 
 <body>
+    {% if messages %}
+    <ul class="messages" id="message-container">
+        {% for message in messages %}
+        <li class="message-item {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
 
     <!-- Navbar with Logo -->
     <nav class="navbar">

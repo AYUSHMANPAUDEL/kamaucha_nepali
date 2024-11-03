@@ -4,44 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Processing Payment</title>
+    <style>
+        /* Basic styling for the thank you message and countdown */
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .message {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .countdown {
+            font-size: 2rem;
+            color: #00ff88;  /* Highlight the countdown in a noticeable color */
+        }
+    </style>
 </head>
 <body>
-    <h1>Processing Your Payment...</h1>
+    <div>
+        <h1 class="message">Thank you for your donation! We are processing your payment...</h1>
+        <p class="countdown">Redirecting to the homepage in <span id="countdown">10</span> seconds...</p>
+    </div>
 
     <script>
-        const currentUrl = window.location.origin;
-        const alertId = "{{alert_id}}";  // Replace this with the actual alert ID from the backend
+        const alertId = "{{ alert_id }}";
         const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
         const socketUrl = `${protocol}${window.location.host}/ws/alert/${alertId}/`;
         const ws = new WebSocket(socketUrl);
 
-        // Data from the Django template
-        const donatorName = "{{transcation.donator_name }}";
-        const donationAmount = "{{transcation.donation_amount }}";
-        const donationMessage = "{{transcation.donation_message }}";
-
-        // Prepare the test data
+        // Donation data from the template
         const Data = {
-            donator_name: donatorName,
-            donation_amount: donationAmount,
-            donation_message: donationMessage,
+            donator_name: "{{ transcation.donator_name }}",
+            donation_amount: "{{ transcation.donation_amount }}",
+            donation_message: "{{ transcation.donation_message }}",
         };
 
-        // Send the data and redirect the user
+        // Send WebSocket data
         ws.onopen = function () {
             ws.send(JSON.stringify(Data));
             console.log('Alert sent:', Data);
-
-            // Redirect to a thank you page or another page after sending data
-            window.location.href = "/";
         };
 
         ws.onerror = function (error) {
             console.error('WebSocket Error:', error);
-
-            // Redirect anyway, even if there's an error
-            window.location.href = "/";
         };
+
+        // Countdown timer for redirect
+        let countdown = 10;
+        const countdownElement = document.getElementById("countdown");
+
+        const countdownInterval = setInterval(() => {
+            countdown -= 1;
+            countdownElement.textContent = countdown;
+
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                window.location.href = "/";
+            }
+        }, 500);  // Update every second
     </script>
 </body>
 </html>

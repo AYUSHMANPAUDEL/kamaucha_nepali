@@ -17,17 +17,19 @@
             min-height: 100vh;
             background-color: #f4f6f9;
         }
+        
         /* Sidebar Styling */
         .sidebar {
             min-width: 250px;
             max-width: 250px;
             background-color: #343a40;
             color: #fff;
-            transition: all 0.3s;
+            transition: all 0.4s ease; /* Smoother transition */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Subtle shadow */
         }
         .sidebar .nav-link {
             color: #adb5bd;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
         .sidebar .nav-link:hover {
             background-color: #495057;
@@ -36,19 +38,23 @@
         .sidebar .nav-link.active {
             background-color: #0d6efd;
             color: #fff;
+            transition: background-color 0.4s ease; /* Smooth color transition */
         }
+
         /* Content Styling */
         .content {
             width: 100%;
             padding: 20px;
-            transition: all 0.3s;
+            transition: all 0.4s ease;
         }
+
         /* Top Navbar Styling */
         .top-navbar {
             width: 100%;
             padding: 10px 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: rgba(255, 255, 255, 0.8); /* Light blur effect */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
             position: fixed;
             top: 0;
             z-index: 1000;
@@ -60,10 +66,11 @@
             font-weight: bold;
             color: #0d6efd;
         }
-        /* Adjust content padding to accommodate fixed navbar */
+        
         .main-content {
-            margin-top: 60px;
+            margin-top: 70px;
         }
+
         /* Message Styling */
         .messages {
             list-style: none;
@@ -73,7 +80,7 @@
         .message-item {
             padding: 15px;
             margin-bottom: 10px;
-            border-radius: 8px;
+            border-radius: 6px; /* Slightly reduced for consistency */
             font-size: 16px;
             font-weight: 500;
             color: #fff;
@@ -82,19 +89,18 @@
             align-items: center;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             position: relative;
-            background: linear-gradient(135deg, #00b09b, #96c93d); /* Default gradient */
         }
         .message-item.success {
-            background: linear-gradient(135deg, #00b09b, #96c93d); /* Green for success */
+            background: linear-gradient(135deg, #00b09b, #96c93d);
         }
         .message-item.error {
-            background: linear-gradient(135deg, #f85032, #e73827); /* Red for error */
+            background: linear-gradient(135deg, #f85032, #e73827);
         }
         .message-item.info {
-            background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Blue for info */
+            background: linear-gradient(135deg, #3a7bd5, #3a6073);
         }
         .message-item.warning {
-            background: linear-gradient(135deg, #ffb74d, #f57c00); /* Orange for warning */
+            background: linear-gradient(135deg, #ffb74d, #f57c00);
         }
         .message-item:before {
             content: "";
@@ -104,12 +110,44 @@
             left: 0;
             top: 0;
             border-radius: 8px 0 0 8px;
-            background-color: rgba(255, 255, 255, 0.3); /* Decorative side bar */
+            background-color: rgba(255, 255, 255, 0.3);
         }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Greeting Styling */
+        .greeting {
+            margin-bottom: 30px;
+            animation: slideIn 0.6s ease;
+        }
+        .greeting h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Sidebar Collapsing */
+        .sidebar.collapsed {
+            min-width: 80px;
+            max-width: 80px;
+        }
+        .sidebar.collapsed .nav-link span {
+            display: none;
+        }
+
+        /* Dashboard Card Styling */
+        .card {
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .sidebar {
@@ -121,45 +159,6 @@
                 display: none;
             }
         }
-        /* Greeting Styling */
-        .greeting {
-            margin-bottom: 30px;
-            animation: slideIn 0.5s ease;
-        }
-        .greeting h1 {
-            font-size: 2.5rem;
-            color: #343a40;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        /* Sidebar animation for collapsing and expanding */
-.sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    background-color: #343a40;
-    color: #fff;
-    transition: all 0.3s ease;  /* Transition for smooth animation */
-}
-
-.sidebar.collapsed {
-    min-width: 80px;
-    max-width: 80px;
-}
-
-.content {
-    transition: all 0.3s ease; /* Smooth transition for content width */
-}
-
-.content.expanded {
-    margin-left: 80px; /* Adjust margin when sidebar is collapsed */
-}
-
-/* Optional: Hide text in sidebar when collapsed */
-.sidebar.collapsed .nav-link span {
-    display: none;
-}
 
 
     </style>
@@ -221,7 +220,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userDropdown">
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href"{% url "logout_page" %}">Sign out</a></li>
+                <li><a class="dropdown-item" href="{% url "logout_page"%}">Sign out</a></li>
             </ul>
         </div>
     </nav>

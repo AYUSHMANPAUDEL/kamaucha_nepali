@@ -5,52 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kamaucha Nepali - Login</title>
     <style>
+        /* Basic Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #0f4c75, #3282b8);
+            height: 100vh;
+            background: linear-gradient(135deg, #121936, #1b2147, #2c2d6a, #121936);
+            color: #f5f5f5;
         }
-        .login-container {
-            background-color: #fff;
+
+        /* Split screen layout */
+        .login-left, .features-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 40px;
+        }
+
+        /* Login form container */
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 50px;
             border-radius: 15px;
-            box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.3);
             max-width: 400px;
             width: 100%;
             text-align: center;
         }
+
         .login-container h2 {
             margin-bottom: 20px;
             font-size: 28px;
             font-weight: 600;
-            color: #0f4c75;
+            color: #e94560;
         }
+
         .login-container input {
             width: 100%;
             padding: 15px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
+            border: none;
             border-radius: 8px;
             font-size: 16px;
-            color: #333;
-            background-color: #f7f7f7;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #f5f5f5;
         }
-        .login-container input:focus {
-            border-color: #3282b8;
-            outline: none;
-        }
+
         .login-container button {
             width: 100%;
             padding: 15px;
-            background-color: #3282b8;
+            background-color: #e94560;
             color: #fff;
             font-size: 18px;
             font-weight: 600;
@@ -59,58 +70,126 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .login-container button:hover {
-            background-color: #0f4c75;
+            background-color: #f2677e;
         }
-        .forgot-password {
+
+        .login-container .forgot-password {
             margin-top: 15px;
             font-size: 14px;
         }
-        .forgot-password a {
-            color: #3282b8;
+
+        .login-container .forgot-password a {
+            color: #e94560;
             text-decoration: none;
         }
-        .forgot-password a:hover {
+
+        .login-container .forgot-password a:hover {
             text-decoration: underline;
         }
+
+        /* Right-side features section */
+        .features-right {
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #bfc0c0;
+        }
+
+        .features-right h2 {
+            font-size: 2rem;
+            color: #f5f5f5;
+            margin-bottom: 10px;
+        }
+
+        .features-slider {
+            width: 80%;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .features-slider ul {
+            display: flex;
+            animation: slide 12s infinite;
+            list-style: none; /* This removes the dot */
+            padding: 0; /* Removes any default padding */
+            margin: 0; /* Removes any default margin */
+        }
+        
+
+        .features-slider li {
+            min-width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .features-slider li h3 {
+            font-size: 1.5rem;
+            color: #e94560;
+            margin-bottom: 10px;
+        }
+
+        .features-slider li p {
+            font-size: 1rem;
+            color: #f5f5f5;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(0); }
+            25% { transform: translateX(-100%); }
+            45% { transform: translateX(-100%); }
+            50% { transform: translateX(-200%); }
+            70% { transform: translateX(-200%); }
+            75% { transform: translateX(-300%); }
+            95% { transform: translateX(-300%); }
+            100% { transform: translateX(0); }
+        }
         .messages {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             list-style: none;
             padding: 0;
             margin: 20px 0;
-            max-width: 500px;
+            width: 100%;
+            text-align: center; /* Center the text */
+            z-index: 10; /* Make sure it appears above other content */
         }
         
         .message-item {
             padding: 15px;
             margin-bottom: 10px;
-            border-radius: 8px;
+            border-radius: 6px; /* Slightly reduced for consistency */
             font-size: 16px;
             font-weight: 500;
             color: #fff;
             animation: fadeIn 0.5s ease;
-            display: flex;
-            align-items: center;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             position: relative;
-            background: linear-gradient(135deg, #00b09b, #96c93d); /* Default gradient */
+            display: inline-block; /* Ensure messages don't take the full width */
         }
-        
         .message-item.success {
-            background: linear-gradient(135deg, #00b09b, #96c93d); /* Green for success */
+            background: linear-gradient(135deg, #00b09b, #96c93d);
         }
-        
         .message-item.error {
-            background: linear-gradient(135deg, #f85032, #e73827); /* Red for error */
+            background: linear-gradient(135deg, #f85032, #e73827);
         }
-        
         .message-item.info {
-            background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Blue for info */
+            background: linear-gradient(135deg, #3a7bd5, #3a6073);
         }
-        
         .message-item.warning {
-            background: linear-gradient(135deg, #ffb74d, #f57c00); /* Orange for warning */
+            background: linear-gradient(135deg, #ffb74d, #f57c00);
         }
-        
         .message-item:before {
             content: "";
             width: 8px;
@@ -119,40 +198,83 @@
             left: 0;
             top: 0;
             border-radius: 8px 0 0 8px;
-            background-color: rgba(255, 255, 255, 0.3); /* Decorative side bar */
+            background-color: rgba(255, 255, 255, 0.3);
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
+
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login to Kamaucha Nepali</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            <input type="text" name="username" placeholder="UserName" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <div class="forgot-password">
-            <a href="#">Forgot Password?</a>
+    {% if messages %}
+    <ul class="messages" id="message-container">
+        {% for message in messages %}
+        <li class="message-item {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Left side Login Form -->
+    <div class="login-left">
+        <div class="login-container">
+            <h2>Login to Kamaucha Nepali</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="username" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <div class="forgot-password">
+                <a href="#">Forgot Password?</a>
+            </div>
+            <div class="forgot-password">
+                <p>Don't have an account?</p>
+                <a href="{% url 'register_page' %}">Join Now!</a>
+            </div>
         </div>
-        <div class="forgot-password">
-            <p>Still not a member?</p>
-            <a href="{% url "register_page" %}">Join Now!</a>
-        </div>
-        
     </div>
+
+    <!-- Right side Features Section -->
+    <div class="features-right">
+        <h2>Explore Our Features</h2>
+        <div class="features-slider">
+            <ul>
+                <li>
+                    <h3>Instant Donation Setup</h3>
+                    <p>Quickly configure donation options to start receiving support in minutes.</p>
+                </li>
+                <li>
+                    <h3>Customizable Alerts</h3>
+                    <p>Make every donation stand out with fully customizable alerts.</p>
+                </li>
+                <li>
+                    <h3>Secure Transactions</h3>
+                    <p>Enjoy safe processing and instant accessibility for payouts.</p>
+                </li>
+                <li>
+                    <h3>Real-Time Donation Feed</h3>
+                    <p>Engage with fans in real-time as support rolls in.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        // Automatically hide the message after a few seconds
+        window.onload = function() {
+            const messages = document.getElementById('message-container');
+            if (messages) {
+                setTimeout(() => {
+                    messages.style.opacity = '0'; // Fade out
+                    setTimeout(() => {
+                        messages.style.display = 'none'; // Remove from view after fade out
+                    }, 500); // Match this with the fade out duration
+                }, 2500); // Show for 3 seconds
+            }
+        };
+    </script>
 </body>
 </html>

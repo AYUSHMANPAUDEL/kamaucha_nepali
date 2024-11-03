@@ -30,10 +30,15 @@ def register_page(request):
         if User.objects.filter(email=email).exists():
           messages.error(request, "Email Already Exists!")
           return render(request,"home/register.html")
+        elif User.objects.filter(username=username).exists():
+          messages.error(request, "Username Already Exists!")
+          return redirect("register_page") 
         else:
             user = User.objects.create_user(username=username,first_name=first_name,last_name=last_name,email=email,password=password)
             user.save()
-            return redirect("/login/")
+            login(request,user)
+            messages.success(request, "You have successfully created your account . Please Remember your username for future use.")
+            return redirect("/dashboard/")
     return render(request,"home/register.html")
 
 def login_page(request):
@@ -47,7 +52,7 @@ def login_page(request):
             login(request,user)
             return redirect("/dashboard/")
         else:
-            messages.error(request, "Invalid email or password.")
+            messages.error(request, "Invalid Username or password.")
             return render(request,"home/login.html")
     return render(request,"home/login.html")
 

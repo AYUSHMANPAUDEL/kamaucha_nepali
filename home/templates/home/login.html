@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -205,11 +207,42 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+        /* Logo Container */
+        /* Logo Container */
+        .logo-container {
+            position: fixed;
+            top: 20px; /* Adjust as needed */
+            left: 20px; /* Adjust as needed */
+            z-index: 10; /* Ensure it stays above other content */
+        }
+        
+        .logo-container img {
+            width: 200px; /* Adjust the size to fit nicely */
+            height: auto;
+            max-width: 100%;
+        }
+        
+        /* Adjustments for responsive design */
+        @media (max-width: 768px) {
+            .logo-container img {
+                width: 80px; /* Smaller logo for mobile view */
+            }
+        }
+        
+        
 
     </style>
 </head>
 <body>
+        <div class="logo-container">
+            <a href="/" class="logo">
+                <img src="{% get_media_prefix %}web-essentials/company-logo-no-bg.png" alt="Kamaucha Nepali Logo">
+            </a>
+        </div>
+    
+    
+
+
     {% if messages %}
     <ul class="messages" id="message-container">
         {% for message in messages %}

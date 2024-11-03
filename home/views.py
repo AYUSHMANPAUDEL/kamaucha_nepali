@@ -179,7 +179,7 @@ def transcations_history_page(request):
 
 def donations_page(request):
     if request.user.is_authenticated:
-        recent_donations = Donation.objects.filter(username=request.user).order_by('-donation_date')
+        recent_donations = Donation.objects.filter(username=request.user).order_by('-donation_date')[:30]
         return render(request,"home/donations.html",{"recent_donations":recent_donations})
     return redirect("/login/")
 

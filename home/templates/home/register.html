@@ -1,172 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
-  <style>
-    /* Existing CSS from previous example */
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(120deg, #3498db, #8e44ad);
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .container {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      display: flex;
-      overflow: hidden;
-      width: 80%;
-      max-width: 1200px;
-    }
-    .form-section {
-      padding: 50px;
-      width: 60%;
-    }
-    .form-section h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .form-section input {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .form-section button {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(45deg, #3498db, #8e44ad);
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .form-section button:hover {
-      background: linear-gradient(45deg, #8e44ad, #3498db);
-      transform: scale(1.05);
-    }
-    .info-section {
-      background: #3498db;
-      padding: 50px;
-      width: 40%;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    .info-section h3 {
-      font-size: 28px;
-    }
-    .error-message {
-      color: red;
-      display: none;
-      margin-bottom: 10px;
-    }
-    .messages {
-      list-style: none;
-      padding: 0;
-      margin: 20px 0;
-      max-width: 500px;
-  }
-  
-  .message-item {
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 500;
-      color: #fff;
-      animation: fadeIn 0.5s ease;
-      display: flex;
-      align-items: center;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      position: relative;
-      background: linear-gradient(135deg, #00b09b, #96c93d); /* Default gradient */
-  }
-  
-  .message-item.success {
-      background: linear-gradient(135deg, #00b09b, #96c93d); /* Green for success */
-  }
-  
-  .message-item.error {
-      background: linear-gradient(135deg, #f85032, #e73827); /* Red for error */
-  }
-  
-  .message-item.info {
-      background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Blue for info */
-  }
-  
-  .message-item.warning {
-      background: linear-gradient(135deg, #ffb74d, #f57c00); /* Orange for warning */
-  }
-  
-  .message-item:before {
-      content: "";
-      width: 8px;
-      height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      border-radius: 8px 0 0 8px;
-      background-color: rgba(255, 255, 255, 0.3); /* Decorative side bar */
-  }
-  
-  @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamaucha Nepali - Register</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #121936, #1b2147, #2c2d6a, #121936);
+            color: #f5f5f5;
+        }
+
+        /* Split screen layout */
+        .register-left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /* Register form container */
+        .register-container {
+          background-color: rgba(255, 255, 255, 0.05);
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            border-radius: 15px;
+        }
+
+        .register-container h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #e94560;
+            position: relative;
+            z-index: 2;
+        }
+
+        .register-container input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #f5f5f5;
+            position: relative;
+            z-index: 2;
+        }
+
+        .register-container button {
+            width: 100%;
+            padding: 15px;
+            background-color: #e94560;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .register-container button:hover {
+            background-color: #f2677e ;
+        }
+
+        /* Right-side features section */
+        .features-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #bfc0c0;
+            text-align: center;
+        }
+
+        .features-right h2 {
+            font-size: 2rem;
+            color: #f5f5f5;
+            margin-bottom: 10px;
+        }
+
+        .features-right p {
+            font-size: 1rem;
+            color: #f5f5f5;
+            margin-bottom: 20px;
+        }
+
+        .features-slider {
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .features-slider ul {
+            display: flex;
+            animation: slide 12s infinite;
+            list-style: none; /* This removes the dot */
+            padding: 0; /* Removes any default padding */
+            margin: 0; /* Removes any default margin */
+        }
+        
+        .features-slider li {
+            min-width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin-right: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .features-slider li:hover {
+            transform: scale(1.05);
+        }
+
+        .features-slider li h3 {
+            font-size: 1.5rem;
+            color: #e94560;
+            margin-bottom: 10px;
+        }
+
+        .features-slider li p {
+            font-size: 1rem;
+            color: #f5f5f5;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(0); }
+            25% { transform: translateX(-100%); }
+            45% { transform: translateX(-100%); }
+            50% { transform: translateX(-200%); }
+            70% { transform: translateX(-200%); }
+            75% { transform: translateX(-300%); }
+            95% { transform: translateX(-300%); }
+            100% { transform: translateX(0); }
+        }
+        .messages {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          list-style: none;
+          padding: 0;
+          margin: 20px 0;
+          width: 100%;
+          text-align: center; /* Center the text */
+          z-index: 10; /* Make sure it appears above other content */
+      }
+      
+      .message-item {
+          padding: 15px;
+          margin-bottom: 10px;
+          border-radius: 6px; /* Slightly reduced for consistency */
+          font-size: 16px;
+          font-weight: 500;
+          color: #fff;
+          animation: fadeIn 0.5s ease;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+          position: relative;
+          display: inline-block; /* Ensure messages don't take the full width */
+      }
+      .message-item.success {
+          background: linear-gradient(135deg, #00b09b, #96c93d);
+      }
+      .message-item.error {
+          background: linear-gradient(135deg, #f85032, #e73827);
+      }
+      .message-item.info {
+          background: linear-gradient(135deg, #3a7bd5, #3a6073);
+      }
+      .message-item.warning {
+          background: linear-gradient(135deg, #ffb74d, #f57c00);
+      }
+      .message-item:before {
+          content: "";
+          width: 8px;
+          height: 100%;
+          position: absolute;
+          left: 0;
+          top: 0;
+          border-radius: 8px 0 0 8px;
+          background-color: rgba(255, 255, 255, 0.3);
+      }
+
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+      }
+
+    </style>
 </head>
 <body>
+  {% if messages %}
+  <ul class="messages" id="message-container">
+      {% for message in messages %}
+      <li class="message-item {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
 
-  <div class="container">
-    <div class="info-section">
-      <h3>Join the Future of Streaming Today!</h3>
-    </div>
-    <div class="form-section">
-      <h2>Register</h2>
-      <form method="POST">
-        {% csrf_token %}
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-      <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
-      <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
-      <input type="text" name="username" id="username" placeholder="Username" required>
-      <input type="email" id="email" name="email" placeholder="Email Address" required>
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <input type="password" id="confirm-password" placeholder="Confirm Password" required>
-      <button type="submit" onclick="validatePasswords()">Join Now</button>
-      </form>
-    </div>
-  </div>
 
-  <script>
-    function validatePasswords() {
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirm-password").value
-      const errorMessage = document.getElementById("error-message");
-      if (password !== confirmPassword) {
-        errorMessage.style.display = "block";
-      } else {
-        errorMessage.style.display = "none";
+    <!-- Left side Register Form -->
+    <div class="register-left">
+        <div class="register-container">
+            <h2>Create Your Kamaucha Nepali Account</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="first_name" placeholder="First Name" required>
+                <input type="text" name="last_name" placeholder="Last Name" required>
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                <button type="submit" onclick="validatePasswords()">Join Now</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right side Features Section -->
+    <div class="features-right">
+        <h2>Why Join Us?</h2>
+        <p>Discover the unique features that make Kamaucha Nepali the perfect platform for you!</p>
+        <div class="features-slider">
+            <ul>
+                <li>
+                    <h3>Instant Donation Setup</h3>
+                    <p>Quickly configure donation options to start receiving support in minutes.</p>
+                </li>
+                <li>
+                    <h3>Customizable Alerts</h3>
+                    <p>Make every donation stand out with fully customizable alerts.</p>
+                </li>
+                <li>
+                    <h3>Secure Transactions</h3>
+                    <p>Enjoy safe processing and instant accessibility for payouts.</p>
+                </li>
+                <li>
+                    <h3>Real-Time Donation Feed</h3>
+                    <p>Engage with fans in real-time as support rolls in.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+      function validatePasswords(event) {
+          const password = document.getElementById("password").value;
+          const confirmPassword = document.getElementById("confirm-password").value;
+          if (password !== confirmPassword) {
+              event.preventDefault();
+              alert("Passwords do not match!");
+          }
       }
-    }
   </script>
-
+  <script>
+    // Automatically hide the message after a few seconds
+    window.onload = function() {
+        const messages = document.getElementById('message-container');
+        if (messages) {
+            setTimeout(() => {
+                messages.style.opacity = '0'; // Fade out
+                setTimeout(() => {
+                    messages.style.display = 'none'; // Remove from view after fade out
+                }, 500); // Match this with the fade out duration
+            }, 2500); // Show for 3 seconds
+        }
+    };
+</script>
 </body>
 </html>

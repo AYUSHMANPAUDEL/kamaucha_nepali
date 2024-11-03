@@ -243,7 +243,16 @@
             width: 80px; /* Smaller logo for mobile view */
         }
     }
-    
+    .forgot-password {
+        margin-top: 15px;
+        font-size: 14px;}
+        .forgot-password a {
+            color: #e94560;
+            text-decoration: none;
+        }
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -271,10 +280,15 @@
                 <input type="text" name="last_name" placeholder="Last Name" required>
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="email" name="email" placeholder="Email Address" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-                <button type="submit" onclick="validatePasswords()">Join Now</button>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="password"  id="confirm-password" name="confirm_password" placeholder="Confirm Password" required>
+                <button type="submit" onclick="validatePasswords(event)">Join Now</button>
             </form>
+            <div class="forgot-password" style="position: relative; z-index: 5;">
+                <p>Already have an account?</p>
+                <a href="{% url 'login_page' %}" style="z-index: 5;">Login Now!</a>
+            </div>
+            
         </div>
     </div>
 
@@ -304,14 +318,15 @@
         </div>
     </div>
     <script>
-      function validatePasswords(event) {
-          const password = document.getElementById("password").value;
-          const confirmPassword = document.getElementById("confirm-password").value;
-          if (password !== confirmPassword) {
-              event.preventDefault();
-              alert("Passwords do not match!");
-          }
-      }
+ function validatePasswords(event) {
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+    if (password !== confirmPassword) {
+        event.preventDefault(); // Prevent form submission
+        alert("Passwords do not match!");
+    }   
+}
+
   </script>
   <script>
     // Automatically hide the message after a few seconds

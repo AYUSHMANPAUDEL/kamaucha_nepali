@@ -136,6 +136,7 @@ class Alert(models.Model):
 @receiver(post_save, sender=User)
 def create_user_alert(sender, instance, created, **kwargs):
     if created:
+        print(f"Creating Alert for user: {instance.username}")
         Alert.objects.create(username=instance)
 
 class Donation_page(models.Model):

@@ -493,7 +493,7 @@ display: none;
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{% url 'payout_request_page' %}" class="nav-link active">
+                <a href="{% url 'payout_request_page' %}" class="nav-link active    ">
                     <i class="bi bi-wallet2"></i>
                     <span>Payout Requests</span>
                 </a>
@@ -595,7 +595,7 @@ display: none;
             </form>
         
             <!-- Error message -->
-            <div id="form-error" class="form-error">Amount exceeds total available amount!</div>
+            <div id="form-error" class="form-error">Invalid Amount!</div>
         </div>
         <div class="requests_container">
             <h1>Payout Requests</h1>
@@ -649,7 +649,7 @@ display: none;
                 const enteredAmount = parseFloat(document.getElementById('amount').value);
         
                 // Validate amount
-                if (enteredAmount > totalAmount) {
+                if (enteredAmount > totalAmount ||enteredAmount === 0 ) {
                     event.preventDefault();
                     document.getElementById('form-error').style.display = 'block';
                 } else {

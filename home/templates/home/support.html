@@ -152,52 +152,136 @@
         .sidebar.collapsed .nav-link span {
             display: none;
         }
+        .sidebar {
+            background-color: #121936;
+            min-width: 250px;
+            color: #fff;
+            height: 200vh;
+            overflow-y: auto;
+        }
+    
+        /* Navbar brand */
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f0f0f0;
+        }
+    
+        /* Nav Links */
+        .nav-link {
+            color: #b0b3b8;
+            font-size: 1.1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: #1b2342;
+            color: #ffffff;
+        }
+    
+        /* Nav icons */
+        .nav-link i {
+            font-size: 1.3rem;
+            margin-right: 10px;
+            color: #9fa5b1;
+        }
+    
+        /* Username styling */
+        .username {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    
+        /* Dropdown Styling */
+        .dropdown-toggle {
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+    
+        .dropdown-item {
+            color: #b0b3b8;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+    
+        .dropdown-item:hover {
+            background-color: #1b2342;
+            color: #ffffff;
+        }
+        
+        /* Divider */
+        hr {
+            border-top: 1px solid #3b3e45;
+        }
+    .sidebar.collapsed {
+        min-width: 80px;
+        max-width: 80px;
+        overflow: hidden;  
+    }
+    
+    .content {
+        transition: all 0.3s ease; /* Smooth transition for content width */
+    }
+    
+    .content.expanded {
+        margin-left: 80px; /* Adjust margin when sidebar is collapsed */
+    }
+    
+    /* Optional: Hide text in sidebar when collapsed */
+    .sidebar.collapsed .nav-link span {
+        display: none;
+    }
     </style>
 </head>
 <body>
     <!-- Sidebar -->
     <nav class="sidebar d-flex flex-column p-3">
-        <a href="#" class="navbar-brand mb-4">Kamaucha Nepali</a>
+        <a href="#" class="navbar-brand mb-4 text-white">Kamaucha Nepali</a>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item mb-2">
-                <a href="{% url "dashboard_page" %}" class="nav-link">
-                    <i class="bi bi-house-door-fill"></i>
+                <a href="{% url 'dashboard_page' %}" class="nav-link">
+                    <i class="bi bi-speedometer2"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{% url "donation_setup_page" %}" class="nav-link">
-                    <i class="bi bi-cash-coin"></i>
+                <a href="{% url 'donation_setup_page' %}" class="nav-link">
+                    <i class="bi bi-cash-stack"></i>
                     <span>Donation Page</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{% url "alert_setup_page" %}" class="nav-link">
-                    <i class="bi bi-bell-fill"></i>
+                <a href="{% url 'alert_setup_page' %}" class="nav-link">
+                    <i class="bi bi-bell"></i>
                     <span>Alert Setup</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{% url "payout_request_page" %}" class="nav-link">
-                    <i class="bi bi-wallet-fill"></i>
+                <a href="{% url 'payout_request_page' %}" class="nav-link">
+                    <i class="bi bi-wallet2"></i>
                     <span>Payout Requests</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{% url "support_page" %}" class="nav-link active">
+                <a href="{% url 'support_page' %}" class="nav-link active">
                     <i class="bi bi-life-preserver"></i>
                     <span>Support</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{% url "transcations_history_page" %}" class="nav-link">
-                    <i class="bi bi-file-earmark-text"></i>
+                <a href="{% url 'transcations_history_page' %}" class="nav-link">
+                    <i class="bi bi-card-checklist"></i>
                     <span>Transaction History</span>
                 </a>
             </li>
             <li class="nav-item mb-2">
-                <a href="{% url "donations_page" %}" class="nav-link">
-                    <i class="bi bi-gift-fill"></i>
+                <a href="{% url 'donations_page' %}" class="nav-link">
+                    <i class="bi bi-cup"></i>
                     <span>Donations</span>
                 </a>
             </li>
@@ -206,17 +290,14 @@
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-person-circle me-2"></i>
-                <span>{{ user.username }}</span>
+                <span class="username">{{user.username}}</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{% url 'logout_page' %}">Sign out</a></li>
             </ul>
         </div>
     </nav>
-
     <!-- Main Content -->
     <div class="content flex-grow-1">
         <!-- Top Navbar -->

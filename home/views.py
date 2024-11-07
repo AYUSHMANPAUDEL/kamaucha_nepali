@@ -1,4 +1,4 @@
-from django.shortcuts import render , HttpResponse , redirect , HttpResponseRedirect
+from django.shortcuts import render , HttpResponse , redirect , HttpResponseRedirect , Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate , login , logout
 from django.contrib import messages
@@ -12,6 +12,9 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 import requests
+import os
+
+
 # Create your views here.
 def home_page(request):
     if request.user.is_authenticated:
@@ -332,4 +335,4 @@ def live_donations_preview(request,alert_id):
     return HttpResponse("404 PAGE NOT FOUND")\
     
 def handler_404(request,exception):
-    return render(request,"home/404.html",{}) 
+    return render(request,"home/404.html",status=404) 

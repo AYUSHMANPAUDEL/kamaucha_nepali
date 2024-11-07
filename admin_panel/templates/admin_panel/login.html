@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamaucha Admin Login</title>
+    <style>
+        /* Full screen background */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f, #24243e);
+            color: #fff;
+        }
+
+        /* Container for the login form */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(36, 36, 62, 0.9);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Title */
+        .login-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #e0e0ff;
+        }
+
+        /* Input styling */
+        .login-container input[type="text"], .login-container input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            background: #333354;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        /* Button styling */
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #4e4ee0;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .login-container button:hover {
+            background: #6464ff;
+        }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 0; /* Remove margins for centering */
+            position: fixed; /* Use fixed positioning for center display */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Offset by half the width and height */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+        
+        .message-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            animation: fadeIn 0.5s ease, fadeOut 0.5s ease forwards 2.5s; /* Add fadeOut animation */
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .message-item.success {
+            background: linear-gradient(135deg, #00b09b, #96c93d); /* Green for success */
+        }
+        
+        .message-item.error {
+            background: linear-gradient(135deg, #f85032, #e73827); /* Red for error */
+        }
+        
+        .message-item.info {
+            background: linear-gradient(135deg, #3a7bd5, #3a6073); /* Blue for info */
+        }
+        
+        .message-item.warning {
+            background: linear-gradient(135deg, #ffb74d, #f57c00); /* Orange for warning */
+        }
+        
+        .message-item:before {
+            content: "";
+            width: 8px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 8px 0 0 8px;
+            background-color: rgba(255, 255, 255, 0.3); /* Decorative side bar */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    {% if messages %}
+    <ul class="messages" id="message-container">
+        {% for message in messages %}
+        <li class="message-item {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="login-container">
+        <div class="login-title">Kamaucha Admin Login</div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" name="username" required>
+            <input type="password" name="password" placeholder="Password" name="password" required>
+            <button type="submit">Log In</button>
+        </form>
+    </div>
+
+    <script>
+        // Automatically hide the message after a few seconds
+        window.onload = function() {
+            const messages = document.getElementById('message-container');
+            if (messages) {
+                setTimeout(() => {
+                    messages.style.opacity = '0'; // Fade out
+                    setTimeout(() => {
+                        messages.style.display = 'none'; // Remove from view after fade out
+                    }, 500); // Match this with the fade out duration
+                }, 2500); // Show for 3 seconds
+            }
+        };
+    </script>
+</body>
+</html>

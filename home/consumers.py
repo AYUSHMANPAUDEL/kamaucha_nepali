@@ -13,7 +13,8 @@ class alert_consumer(AsyncConsumer):
         print(origin)
         allowed_origins = [
             'https://www.your-website.com',
-            'http://127.0.0.1:8000',  # Corrected localhost entry
+            'http://127.0.0.1:8000',
+            'http://127.0.0.1:8001',  # Corrected localhost entry
             'http://localhost:8000',   # Added another common way to access localhost
             'http://away-peers.gl.at.ply.gg:5318',  # Another allowed origin
         ]
@@ -24,7 +25,7 @@ class alert_consumer(AsyncConsumer):
             "type": "websocket.accept"  # Accept the WebSocket connection
         })  # Accept the WebSocket connection
         else:
-          print("cheater")
+          print("user form another origin (url)")
           raise StopConsumer
 
      async def websocket_receive(self, event):

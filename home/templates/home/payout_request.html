@@ -589,7 +589,7 @@ display: none;
                 <div class="mb-3">
                     <label for="payment_account" class="form-label">Payment Account Number/Email</label>
                     <input type="text" class="form-control" id="payment_account" name="payment_account" placeholder="Enter account number or email" required>
-                </div>
+                </div>  
         
                 <button type="submit" class="btn btn-submit">Request Payout</button>
             </form>
@@ -642,16 +642,18 @@ display: none;
         
         <script>
             document.getElementById('payout-form').addEventListener('submit', function(event) {
-                
-                console.log("hahahha")
+                console.log("Validating payout form...");
+        
                 // Get total amount and inputted amount
-                const totalAmount = parseFloat("{{ total_donation }}");
+                const totalAmount = parseFloat("{{ total_donation }}");  // Make sure total_donation is safely passed
                 const enteredAmount = parseFloat(document.getElementById('amount').value);
         
                 // Validate amount
-                if (enteredAmount > totalAmount ||enteredAmount === 0 ) {
-                    event.preventDefault();
+                if (isNaN(enteredAmount) || enteredAmount <= 0 || enteredAmount > totalAmount) {
+                    event.preventDefault(); // Prevent form submission
                     document.getElementById('form-error').style.display = 'block';
+                    document.getElementById('form-error').textContent = 
+                        "Please enter a valid amount between 1 and " + totalAmount;
                 } else {
                     document.getElementById('form-error').style.display = 'none';
                 }

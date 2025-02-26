@@ -19,6 +19,7 @@ import os
 def home_page(request):
     if request.user.is_authenticated:
         return redirect("dashboard_page")
+    return redirect("register_page")
     return render(request,"home/index.html")
 
 def register_page(request):
